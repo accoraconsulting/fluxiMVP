@@ -1,0 +1,84 @@
+.kyc-review-wrapper {
+  background: white;
+  border-radius: 16px;
+  padding: 40px;
+  max-width: 720px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.kyc-review-title {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.kyc-review-subtitle {
+  color: #6b7280;
+  margin-bottom: 32px;
+}
+
+.kyc-review-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.kyc-step {
+  display: flex;
+  align-items: center;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px;
+  gap: 16px;
+}
+
+.kyc-step.done {
+  border-color: #22c55e;
+  background: #f0fdf4;
+}
+
+.kyc-step.active {
+  border-color: #6366f1;
+  background: #eef2ff;
+}
+
+.kyc-step-number {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+
+.kyc-step.done .kyc-step-number {
+  background: #22c55e;
+  color: white;
+}
+
+.kyc-step.active .kyc-step-number {
+  background: #4f46e5;
+  color: white;
+}
+
+.kyc-review-actions {
+  margin-top: 24px;
+}
+
+.kyc-review-btn {
+  background: #4f46e5;
+  color: white;
+  padding: 12px 28px;
+  border-radius: 10px;
+  font-size: 15px;
+  cursor: pointer;
+  border: none;
+}
+
+.kyc-review-btn:hover {
+  background: #4338ca;
+}

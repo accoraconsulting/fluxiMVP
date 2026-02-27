@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>FLUXI | Depositar</title>
+
+  <!-- 🔐 VALIDACIÓN DE SESIÓN -->
+  <script>
+    (function() {
+      const token = localStorage.getItem('auth_token');
+      const logoutTime = localStorage.getItem('logout_timestamp');
+      if (!token || logoutTime) {
+        localStorage.clear();
+        window.location.replace('./login.html');
+      }
+    })();
+  </script>
+
+  <!-- Boxicons -->
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+
+  <!-- Sidebar -->
+  <link rel="stylesheet" href="./css/css-dashboard/css-sidebar.css" />
+  <link rel="stylesheet" href="css/notification-widget.css">
+  <link rel="stylesheet" href="./css/notification-widget-unified.css" />
+  <link rel="stylesheet" href="./css/navbar-unified.css" />
+  <link rel="stylesheet" href="./css/css-dashboard/deposit.css" />
+</head>
+
+<body>
+  <div class="app-layout">
+    <div id="sidebar-container"></div>
+
+    <main class="main-content">
+      <header class="fluxi-navbar">
+        <div class="fluxi-navbar-left">
+          <h1 class="fluxi-page-title">Depositar</h1>
+        </div>
+        <div class="fluxi-navbar-brand">
+          <img src="./assets/fluxi.png" class="fluxi-navbar-brand-logo" alt="FLUXI Logo" />
+        </div>
+        <div class="fluxi-navbar-right">
+          <div class="fluxi-notification-icon" id="navNotificationIcon">
+            <i class="bx bx-bell"></i>
+            <span class="fluxi-notification-badge" id="navNotificationBadge" style="display: none;">0</span>
+          </div>
+          <div class="fluxi-user" id="navUserButton">
+            <img src="./assets/mascota.jpeg" alt="Avatar" class="fluxi-user-avatar" />
+            <span class="fluxi-username" id="navUsername">Usuario</span>
+            <div class="fluxi-user-menu" id="navUserMenu">
+              <button class="fluxi-user-menu-item">
+                <i class="bx bx-log-out"></i>
+                <span>Cerrar Sesión</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <section class="page-header">
+        <h1 class="page-title">Depositar</h1>
+        <p class="page-subtitle">Añade fondos a tu wallet de forma segura</p>
+      </section>
+
+      <section class="deposit-layout">
+        <div class="deposit-card">
+          <h3>Detalles del depósito</h3>
+
+          <div class="form-group">
+            <label>Activo</label>
+            <select>
+              <option>Selecciona un activo...</option>
+              <option>USDT</option>
+              <option>Bitcoin (BTC)</option>
+              <option>Ethereum (ETH)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Red/Blockchain</label>
+            <select>
+              <option value="">Selecciona una red...</option>
+              <option value="mainnet">Red Principal (Mainnet)</option>
+              <option value="testnet">Red de Prueba (Testnet)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Cantidad</label>
+            <input type="number" placeholder="0.00" min="0" step="0.0001" />
+            <small style="color: #64748b; margin-top: 4px;">Mínimo 0.0001</small>
+          </div>
+
+          <button class="btn-primary" style="width: 100%; margin-top: 16px;">
+            Generar Dirección
+          </button>
+        </div>
+
+        <div class="deposit-card">
+          <h3>Tu dirección de depósito</h3>
+
+          <div class="address-display">
+            <div class="address-box">
+              <code style="word-break: break-all;">1A1z7agoat4FqC2BMwamsTBER6xP5hDis</code>
+              <button class="btn-copy">
+                <i class="bx bx-copy"></i> Copiar
+              </button>
+            </div>
+          </div>
+
+          <div style="text-align: center; margin: 20px 0;">
+            <p style="font-size: 12px; color: #64748b; margin-bottom: 8px;">Código QR</p>
+            <div style="display: inline-block; width: 150px; height: 150px; border: 1px solid #e2e8f0; border-radius: 8px; background: #f8fafc;">
+              QR Code Placeholder
+            </div>
+          </div>
+
+          <div class="deposit-info">
+            <h4>Información importante</h4>
+            <ul>
+              <li>✓ Las transferencias se confirman en aproximadamente 10-30 minutos</li>
+              <li>✓ Asegúrate de enviar desde tu wallet personal</li>
+              <li>⚠️ No envíes desde exchanges sin verificar</li>
+              <li>⚠️ Una transacción incorrecta no se puede revertir</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <div style="clear: both;"></div>
+    </main>
+  </div>
+
+  <script src="/FRONTEND/js/js-dashboard/sidebar-loader.js"></script>
+  <script src="/FRONTEND/js/navbar-unified.js"></script>
+  <script type="module" src="/FRONTEND/js/js-dashboard/deposit.js"></script>
+</body>
+</html>

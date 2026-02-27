@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>FLUXI Dashboard</title>
+
+  <!-- Boxicons -->
+  <link
+    href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+    rel="stylesheet"
+  />
+
+  <!-- Sidebar CSS -->
+  <link rel="stylesheet" href="./css/css-dashboard/css-sidebar.css" />
+  <link rel="stylesheet" href="./css/css-dashboard/dashboard.css" />
+</head>
+<body>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <button class="toggle-btn" id="toggleSidebar">
+        <i class="bx bx-menu"></i>
+      </button>
+      <span class="sidebar-brand">FLUXI</span>
+    </div>
+
+    <nav class="sidebar-menu">
+      <a href="./dashboard.html" class="menu-item" id="sidebar-dashboard">
+        <i class="bx bx-home icon"></i>
+        <span class="label">Inicio</span>
+      </a>
+
+      <a href="./wallet.html" class="menu-item" id="sidebar-wallet">
+        <i class="bx bx-wallet icon"></i>
+        <span class="label">Wallet</span>
+      </a>
+
+      <a href="./moviments.html" class="menu-item" id="sidebar-movements">
+        <i class="bx bx-transfer icon"></i>
+        <span class="label">Movimientos</span>
+      </a>
+
+      <a href="./send.html" class="menu-item" id="sidebar-send">
+        <i class="bx bx-send icon"></i>
+        <span class="label">Enviar</span>
+      </a>
+
+      <a href="./deposit.html" class="menu-item" id="sidebar-deposit">
+        <i class="bx bx-download icon"></i>
+        <span class="label">Depositar</span>
+      </a>
+
+      <a href="./withdraw.html" class="menu-item" id="sidebar-withdraw">
+        <i class="bx bx-upload icon"></i>
+        <span class="label">Retirar</span>
+      </a>
+
+      <a href="./enrolled.html" class="menu-item" id="sidebar-enrolled">
+        <i class="bx bx-user-plus icon"></i>
+        <span class="label">Inscritos</span>
+      </a>
+
+      <a href="./registerkyc.html"
+        class="menu-item"
+        id="sidebar-kyc"
+        data-kyc-item
+        style="display:none">
+        <i class="bx bx-id-card icon"></i>
+        <span class="label">Verificar identidad</span>
+      </a>
+
+      <!-- 🔥 NUEVO: PANEL DE ADMINISTRACIÓN -->
+      <a href="./admin-panel.html" class="menu-item" id="sidebar-admin" data-admin-panel style="display:none">
+        <i class='bx bx-shield-quarter icon'></i>
+        <span class="label">Panel Admin</span>
+      </a>
+
+      <!-- 💳 SISTEMA DE PAYINS (DESHABILITADO PARA MVP) -->
+
+    </nav>
+
+    <div class="sidebar-footer">
+      <a href="./support.html" class="menu-item" id="sidebar-support">
+        <i class="bx bx-support icon"></i>
+        <span class="label">Soporte</span>
+      </a>
+
+      <a href="./myaccount.html" class="menu-item" id="sidebar-myaccount">
+        <i class="bx bx-user-circle icon"></i>
+        <span class="label">Mi cuenta</span>
+      </a>
+
+      <button id="sidebarLogout" class="menu-item logout" style="border: none; background: none; cursor: pointer; width: 100%; text-align: left;">
+        <i class="bx bx-log-out icon"></i>
+        <span class="label">Cerrar sesión</span>
+      </button>
+
+      <!-- 🔥 GESTIÓN KYC (solo fluxiDocs) -->
+      <a href="./kyc-management.html" class="menu-item" data-kyc-management style="display:none">
+        <i class='bx bx-clipboard icon'></i>
+        <span class="label">Gestión KYC</span>
+      </a>
+    </div>
+
+  </aside>
+
+  <!-- JS - Scripts removidos, ahora se ejecutan desde sidebar.js -->
+  <script src="/FRONTEND/js/js-dashboard/sidebar.js"></script>
+  <script src="/FRONTEND/js/js-dashboard/sidebar-kyc.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>FLUXI | Soporte</title>
+
+  <!-- 🔐 VALIDACIÓN DE SESIÓN - EJECUTA ANTES DE RENDERIZAR -->
+  <script>
+    (function() {
+      const token = localStorage.getItem('auth_token');
+      const logoutTime = localStorage.getItem('logout_timestamp');
+      if (!token || logoutTime) {
+        localStorage.clear();
+        window.location.replace('./login.html');
+      }
+    })();
+  </script>
+
+
+  <!-- Boxicons -->
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+
+  <!-- Sidebar -->
+  <link rel="stylesheet" href="./css/css-dashboard/css-sidebar.css" />
+    <!-- Estilos del widget -->
+  <link rel="stylesheet" href="css/notification-widget.css">
+  <!-- Notification Widget - Navbar Unificado -->
+  <link rel="stylesheet" href="./css/notification-widget-unified.css" />
+  <!-- Navbar Unificado -->
+  <link rel="stylesheet" href="./css/navbar-unified.css" />
+
+  <!-- Soporte styles (refactorizado) -->
+  <link rel="stylesheet" href="./css/css-dashboard/support-new.css" />
+</head>
+
+<body>
+  <div class="app-layout">
+
+    <!-- SIDEBAR -->
+    <div id="sidebar-container"></div>
+
+    <!-- MAIN -->
+    <main class="main-content">
+
+      <!-- NAVBAR UNIFICADO -->
+      <header class="fluxi-navbar">
+        <div class="fluxi-navbar-left">
+          <h1 class="fluxi-page-title" id="navbarPageTitle">Soporte</h1>
+        </div>
+        <div class="fluxi-navbar-brand">
+          <img src="./assets/fluxi.png" class="fluxi-navbar-brand-logo" alt="FLUXI Logo" />
+        </div>
+        <div class="fluxi-navbar-right">
+          <div class="fluxi-notification-icon" id="navNotificationIcon">
+            <i class="bx bx-bell"></i>
+            <span class="fluxi-notification-badge" id="navNotificationBadge" style="display: none;">0</span>
+          </div>
+          <div class="fluxi-user" id="navUserButton">
+            <img src="./assets/mascota.jpeg" alt="Avatar" class="fluxi-user-avatar" id="navUserAvatar" />
+            <span class="fluxi-username" id="navUsername">Usuario</span>
+            <div class="fluxi-user-menu" id="navUserMenu">
+              <button class="fluxi-user-menu-item" onclick="navigateToProfile()">
+                <i class="bx bx-user"></i>
+                <span>Mi Perfil</span>
+              </button>
+              <button class="fluxi-user-menu-item" onclick="navigateToSettings()">
+                <i class="bx bx-cog"></i>
+                <span>Configuración</span>
+              </button>
+              <div class="fluxi-user-menu-divider"></div>
+              <button class="fluxi-user-menu-item" onclick="logout()" style="color: #f5576c;">
+                <i class="bx bx-log-out"></i>
+                <span>Cerrar Sesión</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- SUPPORT HERO SECTION -->
+      <section class="support-hero">
+        <div class="hero-content">
+          <div class="hero-icon">
+            <i class="bx bxs-help-circle"></i>
+          </div>
+          <h1>Centro de Soporte FLUXI</h1>
+          <p>¿Necesitas ayuda? Estamos aquí para ti. Contacta directamente con nuestro equipo de administradores.</p>
+        </div>
+      </section>
+
+      <!-- SUPPORT INFO CARDS -->
+      <section class="support-info">
+        <div class="info-card">
+          <div class="info-icon">
+            <i class="bx bx-time"></i>
+          </div>
+          <h3>Respuesta Rápida</h3>
+          <p>Nuestro equipo responde en máximo 24 horas</p>
+        </div>
+
+        <div class="info-card">
+          <div class="info-icon">
+            <i class="bx bx-shield"></i>
+          </div>
+          <h3>Seguridad</h3>
+          <p>Tu privacidad y datos están protegidos</p>
+        </div>
+
+        <div class="info-card">
+          <div class="info-icon">
+            <i class="bx bx-user-check"></i>
+          </div>
+          <h3>Equipo Profesional</h3>
+          <p>Soporte personalizado 24/7 disponible</p>
+        </div>
+      </section>
+
+      <!-- CONTACT FORM SECTION -->
+      <section class="support-form-section">
+        <div class="form-container">
+          <div class="form-header">
+            <h2>Envíanos tu Mensaje</h2>
+            <p>Completa el formulario y nos pondremos en contacto a la brevedad</p>
+          </div>
+
+          <form id="supportForm" class="support-form">
+            <!-- CATEGORÍAS -->
+            <div class="form-group">
+              <label>¿Cuál es tu problema?</label>
+              <div class="category-grid">
+                <label class="category-option">
+                  <input type="radio" name="category" value="kyc" required />
+                  <span class="category-label">
+                    <i class="bx bx-file"></i>
+                    <strong>Verificación (KYC)</strong>
+                  </span>
+                </label>
+
+                <label class="category-option">
+                  <input type="radio" name="category" value="wallet" />
+                  <span class="category-label">
+                    <i class="bx bx-wallet"></i>
+                    <strong>Mi Wallet</strong>
+                  </span>
+                </label>
+
+                <label class="category-option">
+                  <input type="radio" name="category" value="transaction" />
+                  <span class="category-label">
+                    <i class="bx bx-transfer"></i>
+                    <strong>Transacciones</strong>
+                  </span>
+                </label>
+
+                <label class="category-option">
+                  <input type="radio" name="category" value="security" />
+                  <span class="category-label">
+                    <i class="bx bx-shield"></i>
+                    <strong>Seguridad</strong>
+                  </span>
+                </label>
+
+                <label class="category-option">
+                  <input type="radio" name="category" value="technical" />
+                  <span class="category-label">
+                    <i class="bx bx-bug"></i>
+                    <strong>Problema Técnico</strong>
+                  </span>
+                </label>
+
+                <label class="category-option">
+                  <input type="radio" name="category" value="other" />
+                  <span class="category-label">
+                    <i class="bx bx-dots-horizontal"></i>
+                    <strong>Otro</strong>
+                  </span>
+                </label>
+              </div>
+            </div>
+
+            <!-- NOMBRE Y EMAIL (2 COLUMNAS) -->
+            <div class="form-row">
+              <div class="form-group">
+                <label for="name">Tu Nombre</label>
+                <input type="text" id="name" name="name" placeholder="Juan Pérez" required />
+              </div>
+
+              <div class="form-group">
+                <label for="email">Tu Email</label>
+                <input type="email" id="email" name="email" placeholder="tu@email.com" required />
+              </div>
+            </div>
+
+            <!-- ASUNTO -->
+            <div class="form-group">
+              <label for="subject">Asunto</label>
+              <input
+                type="text"
+                id="subject"
+                name="subject"
+                placeholder="Describe brevemente tu problema..."
+                required
+              />
+            </div>
+
+            <!-- MENSAJE -->
+            <div class="form-group">
+              <label for="message">Mensaje Detallado</label>
+              <textarea
+                id="message"
+                name="message"
+                placeholder="Explícanos qué está pasando, pasos que realizaste, cualquier información que sea útil..."
+                rows="6"
+                required
+              ></textarea>
+              <small class="form-help">Mínimo 20 caracteres</small>
+            </div>
+
+            <!-- CHECKBOX TÉRMINOS -->
+            <div class="form-group checkbox">
+              <input type="checkbox" id="terms" name="terms" required />
+              <label for="terms">
+                Entiendo que mi mensaje será enviado a los administradores de FLUXI
+              </label>
+            </div>
+
+            <!-- BOTÓN ENVIAR -->
+            <button type="submit" class="btn-submit">
+              <i class="bx bx-send"></i>
+              Enviar Mensaje
+            </button>
+          </form>
+
+          <!-- SUCCESS MESSAGE (OCULTO) -->
+          <div class="form-success" id="formSuccess" style="display: none;">
+            <div class="success-icon">
+              <i class="bx bx-check-circle"></i>
+            </div>
+            <h3>¡Mensaje Enviado!</h3>
+            <p>Gracias por contactarnos. Nuestro equipo revisará tu mensaje y te responderá en máximo 24 horas.</p>
+            <button type="button" class="btn-reset" onclick="resetSupportForm()">
+              Enviar otro mensaje
+            </button>
+          </div>
+        </div>
+
+        <!-- FAQ SECTION -->
+        <div class="faq-section">
+          <h2>Preguntas Frecuentes</h2>
+
+          <div class="faq-item">
+            <div class="faq-question">
+              <i class="bx bx-chevron-right"></i>
+              <span>¿Cuánto tarda en responder el soporte?</span>
+            </div>
+            <div class="faq-answer">
+              Nuestro equipo de soporte responde en máximo 24 horas durante días hábiles. Si tu problema es urgente, intenta describir claramente la situación.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question">
+              <i class="bx bx-chevron-right"></i>
+              <span>¿A quién va dirigido mi mensaje?</span>
+            </div>
+            <div class="faq-answer">
+              Tu mensaje será enviado directamente a los administradores de FLUXI a través de correo electrónico. Ellos revisarán tu caso y te responderán.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question">
+              <i class="bx bx-chevron-right"></i>
+              <span>¿Es seguro enviar información personal?</span>
+            </div>
+            <div class="faq-answer">
+              Sí, todas las comunicaciones están encriptadas y protegidas. Nunca compartimos tu información con terceros.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question">
+              <i class="bx bx-chevron-right"></i>
+              <span>¿Qué debo incluir en mi mensaje?</span>
+            </div>
+            <div class="faq-answer">
+              Describe el problema claramente, los pasos que realizaste antes de que ocurriera, y cualquier error que hayas visto. Esto ayuda a resolver tu caso más rápido.
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- JS -->
+  <script src="./js/js-dashboard/sidebar-loader.js" type="module"></script>
+  <script type="module" src="./js/js-dashboard/support-new.js"></script>
+  <!-- Widget de notificaciones -->
+    <script type="module" src="js/notification-widget.js"></script>
+  <script src="./js/navbar-unified.js"></script>
+<!-- 🔐 SISTEMA DE PERMISOS GLOBAL -->
+<script type="module" src="./js/permissions/init-permissions.js"></script>
+</body>
+</html>

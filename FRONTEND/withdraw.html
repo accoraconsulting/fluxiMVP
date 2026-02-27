@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>FLUXI | Retirar</title>
+
+  <!-- 🔐 VALIDACIÓN DE SESIÓN -->
+  <script>
+    (function() {
+      const token = localStorage.getItem('auth_token');
+      const logoutTime = localStorage.getItem('logout_timestamp');
+      if (!token || logoutTime) {
+        localStorage.clear();
+        window.location.replace('./login.html');
+      }
+    })();
+  </script>
+
+  <!-- Boxicons -->
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+
+  <!-- Sidebar -->
+  <link rel="stylesheet" href="./css/css-dashboard/css-sidebar.css" />
+  <link rel="stylesheet" href="css/notification-widget.css">
+  <link rel="stylesheet" href="./css/notification-widget-unified.css" />
+  <link rel="stylesheet" href="./css/navbar-unified.css" />
+  <link rel="stylesheet" href="./css/css-dashboard/withdraw.css" />
+</head>
+
+<body>
+  <div class="app-layout">
+    <div id="sidebar-container"></div>
+
+    <main class="main-content">
+      <header class="fluxi-navbar">
+        <div class="fluxi-navbar-left">
+          <h1 class="fluxi-page-title">Retirar</h1>
+        </div>
+        <div class="fluxi-navbar-brand">
+          <img src="./assets/fluxi.png" class="fluxi-navbar-brand-logo" alt="FLUXI Logo" />
+        </div>
+        <div class="fluxi-navbar-right">
+          <div class="fluxi-notification-icon" id="navNotificationIcon">
+            <i class="bx bx-bell"></i>
+            <span class="fluxi-notification-badge" id="navNotificationBadge" style="display: none;">0</span>
+          </div>
+          <div class="fluxi-user" id="navUserButton">
+            <img src="./assets/mascota.jpeg" alt="Avatar" class="fluxi-user-avatar" />
+            <span class="fluxi-username" id="navUsername">Usuario</span>
+            <div class="fluxi-user-menu" id="navUserMenu">
+              <button class="fluxi-user-menu-item">
+                <i class="bx bx-log-out"></i>
+                <span>Cerrar Sesión</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <section class="page-header">
+        <h1 class="page-title">Retirar fondos</h1>
+        <p class="page-subtitle">Envía tu dinero a una cuenta bancaria o billetera externa</p>
+      </section>
+
+      <section class="withdraw-layout">
+        <div class="withdraw-card">
+          <h3>Detalles del retiro</h3>
+
+          <div class="form-group">
+            <label>Activo</label>
+            <select>
+              <option>USDT</option>
+              <option>Bitcoin (BTC)</option>
+              <option>Ethereum (ETH)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Monto a retirar</label>
+            <input type="number" placeholder="0.00" />
+            <small>Disponible: 3,029.67 USDT</small>
+          </div>
+
+          <div class="form-group">
+            <label>Método de retiro</label>
+            <select>
+              <option>Cuenta bancaria</option>
+              <option>Billetera externa</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Destino</label>
+            <input type="text" placeholder="Número de cuenta / Dirección wallet" />
+          </div>
+
+          <button class="primary-btn">
+            <i class="bx bx-log-out"></i>
+            Confirmar retiro
+          </button>
+        </div>
+
+        <div class="withdraw-summary">
+          <h4>Resumen</h4>
+
+          <div class="summary-item">
+            <span>Monto</span>
+            <strong>0.00 USDT</strong>
+          </div>
+
+          <div class="summary-item">
+            <span>Comisión</span>
+            <strong>1.5%</strong>
+          </div>
+
+          <div class="summary-item total">
+            <span>Total a recibir</span>
+            <strong>0.00 USDT</strong>
+          </div>
+
+          <div class="alert-box">
+            <i class="bx bx-info-circle"></i>
+            <p>
+              Los retiros pueden tardar entre 1 y 24 horas hábiles dependiendo del método seleccionado.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <div style="clear: both;"></div>
+    </main>
+  </div>
+
+  <script src="./js/js-dashboard/sidebar-loader.js" type="module"></script>
+  <script src="./js/navbar-unified.js"></script>
+  <script type="module" src="./js/js-dashboard/withdraw.js"></script>
+</body>
+</html>

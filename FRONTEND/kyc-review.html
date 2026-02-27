@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Registro FLUXI</title>
+
+  <!-- 🔐 VALIDACIÓN DE SESIÓN - EJECUTA ANTES DE RENDERIZAR -->
+  <script>
+    (function() {
+      const token = localStorage.getItem('auth_token');
+      const logoutTime = localStorage.getItem('logout_timestamp');
+      if (!token || logoutTime) {
+        localStorage.clear();
+        window.location.replace('./login.html');
+      }
+    })();
+  </script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./css/kyc-review.css">
+</head>
+
+<body>
+
+<div class="kyc-page">
+    
+  <div class="kyc-card-wrap">
+    <div class="kyc-card">
+
+      <!-- TOP BAR -->
+      <div class="kyc-topbar">
+
+        <!-- LEFT: BRAND -->
+        <div class="kyc-brand-box">
+          <div class="kyc-brand-title">
+            <span class="kyc-title">Registro</span>
+          </div>
+
+          <div class="kyc-brand-logo">
+            <img src="./assets/fluxi2.png" alt="payO" />
+          </div>
+        </div>
+
+        <!-- RIGHT: PROGRESS -->
+        <div class="kyc-progress">
+          <div class="progress-step completed">
+            <span class="step-dot"></span>
+            <span>Registro</span>
+          </div>
+          <div class="progress-step active">
+            <span class="step-dot"></span>
+            <span>Cuenta en revisión</span>
+          </div>
+          <div class="progress-step">
+            <span class="step-dot"></span>
+            <span>Cuenta verificada</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- CONTENT -->
+      <div class="kyc-content">
+
+        <div id="step-container">
+
+          <div class="kyc-review-wrapper">
+
+            <h2 class="kyc-review-title">Tu cuenta está en proceso de activación</h2>
+            <p class="kyc-review-subtitle">
+              Estamos validando tu información y documentos. Este proceso puede tomar hasta 24 horas.
+            </p>
+
+            <div class="kyc-review-grid">
+
+              <div class="kyc-review-card done">
+                <h4>Registro completado</h4>
+                <p>Tu información fue enviada correctamente.</p>
+              </div>
+
+              <div class="kyc-review-card active">
+                <h4>Cuenta en revisión</h4>
+                <p>
+                  Nuestro equipo está validando tu identidad y documentos.
+                  Si necesitamos algo adicional te notificaremos por correo.
+                </p>
+              </div>
+
+              <div class="kyc-review-card">
+                <h4>Cuenta verificada</h4>
+                <p>
+                  Una vez aprobada tendrás acceso completo a todas las funciones.
+                </p>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- ACTIONS -->
+      <div class="kyc-actions">
+        <button class="kyc-btn secondary" onclick="location.href='./login.html'">
+          Iniciar sesión
+        </button>
+
+        <button class="kyc-btn" onclick="location.href='./dashboard.html'">
+          Ir al dashboard
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- 🔐 SISTEMA DE PERMISOS GLOBAL -->
+<script type="module" src="./js/permissions/init-permissions.js"></script>
+</body>
+</html>

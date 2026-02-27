@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vitawallet - Mock Checkout</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .checkout-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 14px;
+        }
+
+        .body {
+            padding: 30px;
+        }
+
+        .summary {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .summary-row:last-child {
+            margin-bottom: 0;
+            border-top: 1px solid #ddd;
+            padding-top: 12px;
+            margin-top: 12px;
+            font-weight: 600;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .summary-label {
+            color: #666;
+        }
+
+        .summary-value {
+            color: #333;
+            font-weight: 500;
+        }
+
+        .payment-methods {
+            margin-bottom: 25px;
+        }
+
+        .payment-methods h3 {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .method-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .method-button {
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .method-button:hover {
+            border-color: #667eea;
+            background: #f5f7ff;
+        }
+
+        .method-button.active {
+            border-color: #667eea;
+            background: #f5f7ff;
+            color: #667eea;
+        }
+
+        .method-button.pse {
+            grid-column: 1 / -1;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 12px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .cancel-btn {
+            width: 100%;
+            padding: 14px;
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .cancel-btn:hover {
+            background: #f5f7ff;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .success-icon {
+            width: 60px;
+            height: 60px;
+            background: #4caf50;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 30px;
+        }
+
+        .success-message h2 {
+            color: #4caf50;
+            margin-bottom: 10px;
+            font-size: 20px;
+        }
+
+        .success-message p {
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #999;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .error-message {
+            background: #ffebee;
+            color: #c62828;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            display: none;
+        }
+
+        .info-badge {
+            background: #e3f2fd;
+            color: #1565c0;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="checkout-card">
+            <div class="header">
+                <h1>🎯 Vitawallet</h1>
+                <p>MOCK CHECKOUT - Modo Desarrollo</p>
+            </div>
+
+            <div class="body">
+                <div class="info-badge">
+                    ℹ️ Esto es un simulador. El pago NO será procesado realmente.
+                </div>
+
+                <div class="error-message" id="errorMsg"></div>
+
+                <div id="checkout-form">
+                    <div class="summary">
+                        <div class="summary-row">
+                            <span class="summary-label">Monto</span>
+                            <span class="summary-value" id="amountDisplay">-</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Moneda</span>
+                            <span class="summary-value" id="currencyDisplay">-</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">País</span>
+                            <span class="summary-value" id="countryDisplay">-</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Código de Pago</span>
+                            <span class="summary-value" id="codeDisplay" style="font-size: 12px; font-family: monospace;">-</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Total a Pagar</span>
+                            <span id="totalDisplay">-</span>
+                        </div>
+                    </div>
+
+                    <div class="payment-methods">
+                        <h3>Método de Pago</h3>
+                        <div class="method-list" id="methodsList">
+                            <!-- Se llena dinámicamente -->
+                        </div>
+                    </div>
+
+                    <button class="submit-btn" id="submitBtn">Procesar Pago</button>
+                    <button class="cancel-btn" id="cancelBtn">Cancelar</button>
+                </div>
+
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p>Procesando tu pago...</p>
+                </div>
+
+                <div class="success-message" id="successMsg">
+                    <div class="success-icon">✓</div>
+                    <h2>¡Pago Completado!</h2>
+                    <p>Tu transacción ha sido procesada exitosamente.</p>
+                    <p style="color: #999; font-size: 12px;" id="successDetails"></p>
+                </div>
+            </div>
+
+            <div class="footer">
+                Vitawallet © 2024 | Mock Checkout Environment
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Obtener parámetros de la URL
+        const params = new URLSearchParams(window.location.search);
+        const amount = params.get('amount') || '0.00';
+        const currency = params.get('currency') || 'USD';
+        const country = params.get('country') || 'CO';
+        const code = params.get('code') || 'UNKNOWN';
+
+        // Métodos de pago por país
+        const paymentMethods = {
+            'CO': ['PSE', 'NEQUI', 'DAVIPLATA', 'Tarjeta'],
+            'AR': ['KHIPU', 'BIND', 'Tarjeta'],
+            'CL': ['KHIPU', 'WEBPAY', 'Tarjeta'],
+            'BR': ['PIX', 'Tarjeta'],
+            'MX': ['BITSO', 'Tarjeta']
+        };
+
+        // Inicializar UI
+        document.getElementById('amountDisplay').textContent = `${parseFloat(amount).toFixed(2)}`;
+        document.getElementById('currencyDisplay').textContent = currency;
+        document.getElementById('countryDisplay').textContent = country;
+        document.getElementById('codeDisplay').textContent = code;
+        document.getElementById('totalDisplay').textContent = `${parseFloat(amount).toFixed(2)} ${currency}`;
+
+        // Generar botones de métodos de pago
+        const methods = paymentMethods[country] || ['Tarjeta'];
+        const methodsList = document.getElementById('methodsList');
+        let selectedMethod = methods[0];
+
+        methods.forEach(method => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = `method-button ${method === selectedMethod ? 'active' : ''} ${method === 'PSE' ? 'pse' : ''}`;
+            btn.textContent = method;
+            btn.onclick = (e) => {
+                e.preventDefault();
+                document.querySelectorAll('.method-button').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                selectedMethod = method;
+            };
+            methodsList.appendChild(btn);
+        });
+
+        // Manejar envío del formulario
+        document.getElementById('submitBtn').addEventListener('click', async (e) => {
+            e.preventDefault();
+
+            if (!selectedMethod) {
+                showError('Por favor selecciona un método de pago');
+                return;
+            }
+
+            // Mostrar loading
+            document.getElementById('checkout-form').style.display = 'none';
+            document.getElementById('loading').style.display = 'block';
+
+            try {
+                // Simular procesamiento (500ms - 2s)
+                const delay = Math.random() * 1500 + 500;
+                await new Promise(resolve => setTimeout(resolve, delay));
+
+                // Simular respuesta (90% éxito)
+                if (Math.random() < 0.9) {
+                    completePayment();
+                } else {
+                    throw new Error('Transacción rechazada');
+                }
+            } catch (error) {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('checkout-form').style.display = 'block';
+                showError(error.message || 'Error procesando el pago');
+            }
+        });
+
+        // Manejar cancelación
+        document.getElementById('cancelBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            if (confirm('¿Deseas cancelar este pago?')) {
+                const baseUrl = document.referrer || `${window.location.origin}/dashboard.html`;
+                window.location.href = `${baseUrl}?payin_cancelled=true`;
+            }
+        });
+
+        function showError(message) {
+            const errorMsg = document.getElementById('errorMsg');
+            errorMsg.textContent = message;
+            errorMsg.style.display = 'block';
+        }
+
+        function completePayment() {
+            const transactionId = `VITA-${Date.now()}-${Math.random().toString(36).substring(7)}`;
+
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('successMsg').style.display = 'block';
+            document.getElementById('successDetails').innerHTML = `
+                ID: ${transactionId}<br>
+                Método: ${selectedMethod}<br>
+                Monto: ${parseFloat(amount).toFixed(2)} ${currency}
+            `;
+
+            // Redirigir a dashboard después de 3 segundos
+            setTimeout(() => {
+                window.location.href = `${window.location.origin}/dashboard.html?payin_success=true&transaction=${code}`;
+            }, 3000);
+        }
+
+        // Log de carga
+        console.log(`[Mock Checkout] Payin cargado:`, {
+            code, amount, currency, country, selectedMethod
+        });
+    </script>
+</body>
+</html>

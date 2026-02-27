@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>FLUXI | Movimientos</title>
+
+  <!-- 🔐 VALIDACIÓN DE SESIÓN - EJECUTA ANTES DE RENDERIZAR -->
+  <script>
+    (function() {
+      const token = localStorage.getItem('auth_token');
+      const logoutTime = localStorage.getItem('logout_timestamp');
+      if (!token || logoutTime) {
+        localStorage.clear();
+        window.location.replace('./login.html');
+      }
+    })();
+  </script>
+
+
+  <!-- Boxicons -->
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+
+  <!-- Sidebar -->
+  <link rel="stylesheet" href="./css/css-dashboard/css-sidebar.css" />
+  <!-- Estilos del widget -->
+  <link rel="stylesheet" href="css/notification-widget.css">
+  <!-- Notification Widget - Navbar Unificado -->
+  <link rel="stylesheet" href="./css/notification-widget-unified.css" />
+  <!-- Navbar Unificado -->
+  <link rel="stylesheet" href="./css/navbar-unified.css" />
+  <!-- Moviments styles -->
+  <link rel="stylesheet" href="./css/css-dashboard/moviments.css" />
+</head>
+
+<body>
+  <div class="app-layout">
+
+    <!-- SIDEBAR -->
+    <div id="sidebar-container"></div>
+
+    <!-- MAIN -->
+    <main class="main-content">
+
+      <!-- NAVBAR UNIFICADO -->
+      <header class="fluxi-navbar">
+        <div class="fluxi-navbar-left">
+          <h1 class="fluxi-page-title" id="navbarPageTitle">Movimientos</h1>
+        </div>
+        <div class="fluxi-navbar-brand">
+          <img src="./assets/fluxi.png" class="fluxi-navbar-brand-logo" alt="FLUXI Logo" />
+        </div>
+        <div class="fluxi-navbar-right">
+          <div class="fluxi-notification-icon" id="navNotificationIcon">
+            <i class="bx bx-bell"></i>
+            <span class="fluxi-notification-badge" id="navNotificationBadge" style="display: none;">0</span>
+          </div>
+          <div class="fluxi-user" id="navUserButton">
+            <img src="./assets/mascota.jpeg" alt="Avatar" class="fluxi-user-avatar" id="navUserAvatar" />
+            <span class="fluxi-username" id="navUsername">Usuario</span>
+            <div class="fluxi-user-menu" id="navUserMenu">
+              <button class="fluxi-user-menu-item" onclick="navigateToProfile()">
+                <i class="bx bx-user"></i>
+                <span>Mi Perfil</span>
+              </button>
+              <button class="fluxi-user-menu-item" onclick="navigateToSettings()">
+                <i class="bx bx-cog"></i>
+                <span>Configuración</span>
+              </button>
+              <div class="fluxi-user-menu-divider"></div>
+              <button class="fluxi-user-menu-item" onclick="logout()" style="color: #f5576c;">
+                <i class="bx bx-log-out"></i>
+                <span>Cerrar Sesión</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- PAGE HEADER -->
+      <section class="page-header">
+        <h1 class="page-title">Movimientos</h1>
+        <p class="page-subtitle">Historial y control de transacciones</p>
+      </section>
+
+      <!-- WALLET SUMMARY -->
+      <section class="wallet-summary">
+        <div class="wallet-card total">
+          <span>Total Balance</span>
+          <h2>$42,580.21</h2>
+          <small>+4.32% últimas 24h</small>
+        </div>
+
+        <div class="wallet-card">
+          <span>Bitcoin</span>
+          <h3>1.245 BTC</h3>
+          <small>$29,430.10</small>
+        </div>
+
+        <div class="wallet-card">
+          <span>Ethereum</span>
+          <h3>8.42 ETH</h3>
+          <small>$10,120.44</small>
+        </div>
+
+        <div class="wallet-card">
+          <span>USDT</span>
+          <h3>3,029</h3>
+          <small>$3,029.67</small>
+        </div>
+      </section>
+
+      <!-- ACTIONS -->
+     <section class="wallet-actions">
+        <button class="action-btn primary" onclick="window.location.href='./send.html#enviar'">
+          <i class="bx bx-send"></i>
+          Enviar
+        </button>
+        <button class="action-btn" onclick="window.location.href='./wallet.html#recargar'">
+          <i class="bx bx-download"></i>
+          Recargar
+        </button>
+        <button class="action-btn" onclick="showConvertModal()">
+          <i class="bx bx-transfer"></i>
+          Cambiar Divisa
+        </button>
+      </section>
+
+  
+
+
+      <!-- FILTERS -->
+<section class="filters-section">
+  <div class="filters-container">
+    <select id="filter-type">
+      <option value="all">Todos los tipos</option>
+      <option value="topup">Recargas</option>
+      <option value="payment">Pagos</option>
+      <option value="transfer">Transferencias</option>
+    </select>
+
+    <select id="filter-currency">
+      <option value="all">Todas las monedas</option>
+      <option value="USD">USD</option>
+      <option value="EUR">EUR</option>
+      <option value="COP">COP</option>
+    </select>
+
+    <button class="btn-refresh" onclick="location.reload()">
+      <i class="bx bx-refresh"></i>
+      Actualizar
+    </button>
+  </div>
+</section>
+
+ 
+<!-- TRANSACTIONS -->
+<section class="transactions">
+  <div class="section-header">
+    <h3>
+      <i class="bx bx-receipt"></i>
+      Últimas transacciones
+    </h3>
+  </div>
+
+  <!-- CONTENEDOR CON SCROLL -->
+  <div class="transactions-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Tipo</th>
+          <th>Destinatario/Origen</th>
+          <th>Moneda</th>
+          <th>Monto</th>
+          <th>Estado</th>
+          <th>Detalles</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td colspan="7" style="text-align: center; padding: 40px;">
+            <div class="loader"></div>
+            <p style="margin-top: 16px; color: #64748b;">Cargando transacciones...</p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+    </main>
+  </div>
+
+
+
+
+
+  <!-- MODAL DE CONVERSIÓN DE DIVISAS -->
+<div id="convertModal" class="convert-modal" style="display: none;">
+  <div class="convert-modal-overlay" onclick="closeConvertModal()"></div>
+  <div class="convert-modal-content">
+    <div class="convert-modal-header">
+      <h2>
+        <i class="bx bx-transfer-alt"></i>
+        Cambiar Divisa
+      </h2>
+      <button class="convert-modal-close" onclick="closeConvertModal()">
+        <i class="bx bx-x"></i>
+      </button>
+    </div>
+
+    <div class="convert-modal-body">
+      <form id="convertForm">
+        <!-- Moneda Origen -->
+        <div class="convert-group">
+          <label>Tienes</label>
+          <div class="convert-input-group">
+            <input
+              type="number"
+              id="convertFromAmount"
+              placeholder="0.00"
+              min="0"
+              step="0.01"
+              required
+            />
+            <select id="convertFromCurrency" required>
+              <option value="">Seleccionar moneda</option>
+              <option value="USD">USD - Dólar</option>
+              <option value="EUR">EUR - Euro</option>
+              <option value="COP">COP - Peso</option>
+              <option value="BTC">BTC - Bitcoin</option>
+            </select>
+          </div>
+          <small id="convertFromBalance" class="balance-info">Disponible: $0.00</small>
+        </div>
+
+        <!-- Botón de conversión -->
+        <div class="convert-arrow">
+          <button type="button" class="convert-swap-btn" onclick="swapConvertCurrencies()" title="Intercambiar monedas">
+            <i class="bx bx-transfer"></i>
+          </button>
+        </div>
+
+        <!-- Moneda Destino -->
+        <div class="convert-group">
+          <label>Recibes</label>
+          <div class="convert-input-group">
+            <input
+              type="text"
+              id="convertToAmount"
+              placeholder="0.00"
+              readonly
+            />
+            <select id="convertToCurrency" required>
+              <option value="">Seleccionar moneda</option>
+              <option value="USD">USD - Dólar</option>
+              <option value="EUR">EUR - Euro</option>
+              <option value="COP">COP - Peso</option>
+              <option value="BTC">BTC - Bitcoin</option>
+            </select>
+          </div>
+          <small id="convertToBalance" class="balance-info">Saldo destino</small>
+        </div>
+
+        <!-- Detalles de conversión -->
+        <div class="convert-details" id="convertDetails" style="display: none;">
+          <div class="detail-row">
+            <span>Tasa de cambio:</span>
+            <strong id="convertRate">1.00</strong>
+          </div>
+          <div class="detail-row">
+            <span>Comisión:</span>
+            <strong id="convertFee">$0.00</strong>
+          </div>
+          <div class="detail-row detail-total">
+            <span>Total a debitar:</span>
+            <strong id="convertTotal">$0.00</strong>
+          </div>
+        </div>
+
+        <!-- Botón de conversión -->
+        <button type="submit" class="convert-btn-submit">
+          <i class="bx bx-check"></i>
+          Convertir Ahora
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+  <script src="./js/js-dashboard/sidebar-loader.js" type="module"></script>
+   <script src="./js/js-dashboard/moviments.js" type="module"></script>
+          <!-- Widget de notificaciones -->
+    <script type="module" src="js/notification-widget.js"></script>
+  <script src="./js/navbar-unified.js"></script>
+<!-- 🔐 SISTEMA DE PERMISOS GLOBAL -->
+<script type="module" src="./js/permissions/init-permissions.js"></script>
+</body>
+</html>

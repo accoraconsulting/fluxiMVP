@@ -1,0 +1,149 @@
+.kyc-biometric {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.kyc-subtitle {
+  color: #6b7280;
+  margin-bottom: 30px;
+}
+
+.kyc-biometric-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+@media (max-width: 900px) {
+  .kyc-biometric-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* CONTENEDOR */
+.kyc-upload-box {
+  position: relative;
+  width: 100%;
+  height: 240px;
+  border-radius: 16px;
+  border: 2px dashed #cbd5e1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  cursor: pointer;
+  background: #f8fafc;
+  transition: all 0.3s ease;
+}
+
+.kyc-upload-box:hover {
+  border-color: #6366f1;
+  background: #eef2ff;
+}
+
+.kyc-upload-box.uploaded {
+  border: 2px solid #22c55e;
+  background: #ecfdf5;
+}
+
+/* LABEL FLOTANTE */
+.kyc-upload-box span {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: rgba(0, 0, 0, 0.65);
+  color: white;
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  z-index: 5;
+}
+
+/* TEXTO */
+.hint {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+/* IMAGEN */
+.preview-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 16px;
+  transition: transform 0.3s ease;
+}
+
+.kyc-upload-box.uploaded .preview-img {
+  transform: scale(1.05);
+}
+
+/* MODAL CAMARA */
+.kyc-camera {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.kyc-camera.hidden {
+  display: none;
+}
+
+.kyc-camera video {
+  width: 90%;
+  max-width: 500px;
+  border-radius: 16px;
+}
+
+.camera-actions {
+  margin-top: 20px;
+  display: flex;
+  gap: 16px;
+}
+
+.camera-actions button {
+  padding: 12px 24px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+#captureBtn {
+  background: #22c55e;
+  color: white;
+}
+
+#cancelBtn {
+  background: #ef4444;
+  color: white;
+}
+
+/*checkox*/
+.kyc-consents {
+  margin-top: 32px;
+  padding: 20px;
+  background: #f8fafc;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+}
+
+.kyc-check {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 14px;
+  color: #374151;
+  margin-bottom: 12px;
+}
+
+.kyc-check input {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+}

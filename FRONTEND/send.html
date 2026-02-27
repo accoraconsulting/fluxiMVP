@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FLUXI | Enviar Dinero</title>
+
+  <!-- 🔐 VALIDACIÓN DE SESIÓN - EJECUTA ANTES DE RENDERIZAR -->
+  <script>
+    (function() {
+      const token = localStorage.getItem('auth_token');
+      const logoutTime = localStorage.getItem('logout_timestamp');
+      if (!token || logoutTime) {
+        localStorage.clear();
+        window.location.replace('./login.html');
+      }
+    })();
+  </script>
+
+
+  <!-- Boxicons -->
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+
+  <!-- Sidebar CSS -->
+  <link rel="stylesheet" href="./css/css-dashboard/css-sidebar.css" />
+  <!-- Estilos del widget -->
+  <link rel="stylesheet" href="css/notification-widget.css">
+  <!-- Notification Widget - Navbar Unificado -->
+  <link rel="stylesheet" href="./css/notification-widget-unified.css" />
+  <!-- Navbar Unificado -->
+  <link rel="stylesheet" href="./css/navbar-unified.css" />
+
+  <!-- Send CSS (refactorizado) -->
+  <link rel="stylesheet" href="./css/css-dashboard/send-refactored.css" />
+</head>
+
+<body>
+  <div class="app-layout">
+
+    <!-- SIDEBAR -->
+    <div id="sidebar-container"></div>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+      <!-- NAVBAR UNIFICADO -->
+      <header class="fluxi-navbar">
+        <div class="fluxi-navbar-left">
+          <h1 class="fluxi-page-title" id="navbarPageTitle">Enviar Dinero</h1>
+        </div>
+        <div class="fluxi-navbar-brand">
+          <img src="/FRONTEND/assets/fluxi.png" class="fluxi-navbar-brand-logo" alt="FLUXI Logo" />
+        </div>
+        <div class="fluxi-navbar-right">
+          <div class="fluxi-notification-icon" id="navNotificationIcon">
+            <i class="bx bx-bell"></i>
+            <span class="fluxi-notification-badge" id="navNotificationBadge" style="display: none;">0</span>
+          </div>
+          <div class="fluxi-user" id="navUserButton">
+            <img src="./assets/mascota.jpeg" alt="Avatar" class="fluxi-user-avatar" id="navUserAvatar" />
+            <span class="fluxi-username" id="navUsername">Usuario</span>
+            <div class="fluxi-user-menu" id="navUserMenu">
+              <button class="fluxi-user-menu-item" onclick="navigateToProfile()">
+                <i class="bx bx-user"></i>
+                <span>Mi Perfil</span>
+              </button>
+              <button class="fluxi-user-menu-item" onclick="navigateToSettings()">
+                <i class="bx bx-cog"></i>
+                <span>Configuración</span>
+              </button>
+              <div class="fluxi-user-menu-divider"></div>
+              <button class="fluxi-user-menu-item" onclick="logout()" style="color: #f5576c;">
+                <i class="bx bx-log-out"></i>
+                <span>Cerrar Sesión</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- CARD PRINCIPAL -->
+      <div class="send-card">
+        <div class="send-card-header">
+          <i class="bx bx-send"></i>
+          <h2>Nueva Transferencia</h2>
+        </div>
+
+        <div class="send-card-body">
+
+          <!-- Paso 1: Seleccionar Destinatario -->
+          <div class="send-step" id="step1">
+            <h3>
+              <span class="step-number">1</span>
+              Selecciona el destinatario
+            </h3>
+
+            <div class="send-recipient-selector">
+              <div class="send-search-box">
+                <i class="bx bx-search"></i>
+                <input 
+                  type="text" 
+                  id="recipientSearch" 
+                  placeholder="Buscar destinatario inscrito..."
+                />
+              </div>
+
+              <div class="send-recipients-list" id="recipientsList">
+                <div class="send-loader"></div>
+              </div>
+
+              <p class="send-no-recipients" id="noRecipients" style="display: none;">
+                No tienes destinatarios inscritos.
+                <a href="./enrolled.html">Inscribir ahora</a>
+              </p>
+            </div>
+          </div>
+
+          <!-- Paso 2: Configurar Montos -->
+          <div class="send-step" id="step2" style="display: none;">
+            <h3>
+              <span class="step-number">2</span>
+              Configura el monto y moneda
+            </h3>
+
+            <div class="send-currency-selector">
+              <!-- Moneda Origen -->
+              <div class="send-currency-group">
+                <label>Envías</label>
+                <div class="send-amount-input">
+                  <input 
+                    type="number" 
+                    id="amountFrom" 
+                    placeholder="0.00"
+                    min="0"
+                    step="0.01"
+                  />
+                  <select id="currencyFrom">
+                    <option value="">Seleccionar</option>
+                  </select>
+                </div>
+                <p class="send-balance" id="balanceFrom">Disponible: $0.00</p>
+              </div>
+
+              <!-- Icono de conversión -->
+              <div class="send-conversion-icon">
+                <i class="bx bx-transfer"></i>
+              </div>
+
+              <!-- Moneda Destino -->
+              <div class="send-currency-group">
+                <label>Recibe</label>
+                <div class="send-amount-input">
+                  <input 
+                    type="text" 
+                    id="amountTo" 
+                    placeholder="0.00"
+                    readonly
+                  />
+                  <select id="currencyTo">
+                    <option value="">Seleccionar</option>
+                  </select>
+                </div>
+                <p class="send-balance">Destinatario: <span id="recipientName"></span></p>
+              </div>
+            </div>
+
+            <!-- Detalles de la conversión -->
+            <div class="send-conversion-details" id="conversionDetails" style="display: none;">
+              <div class="send-detail-row">
+                <span>Tasa de cambio:</span>
+                <strong id="exchangeRateDisplay">1.00</strong>
+              </div>
+              <div class="send-detail-row">
+                <span>Comisión:</span>
+                <strong id="commissionDisplay">$0.00</strong>
+              </div>
+              <div class="send-detail-row send-total">
+                <span>Total a debitar:</span>
+                <strong id="totalDebitDisplay">$0.00</strong>
+              </div>
+            </div>
+
+            <!-- Descripción -->
+            <div class="send-description">
+              <label for="description">Descripción (opcional)</label>
+              <textarea 
+                id="description" 
+                rows="3"
+                placeholder="Agrega una nota sobre esta transferencia..."
+                maxlength="200"
+              ></textarea>
+            </div>
+          </div>
+
+          <!-- Paso 3: Confirmación -->
+          <div class="send-step" id="step3" style="display: none;">
+            <h3>
+              <span class="step-number">3</span>
+              Confirma los detalles
+            </h3>
+
+            <div class="send-confirmation-box">
+              <div class="send-confirm-item">
+                <i class="bx bx-user"></i>
+                <div>
+                  <span class="send-confirm-label">Destinatario</span>
+                  <span class="send-confirm-value" id="confirmRecipient"></span>
+                </div>
+              </div>
+
+              <div class="send-confirm-item">
+                <i class="bx bx-money"></i>
+                <div>
+                  <span class="send-confirm-label">Envías</span>
+                  <span class="send-confirm-value" id="confirmAmountFrom"></span>
+                </div>
+              </div>
+
+              <div class="send-confirm-item">
+                <i class="bx bx-dollar-circle"></i>
+                <div>
+                  <span class="send-confirm-label">Recibe</span>
+                  <span class="send-confirm-value" id="confirmAmountTo"></span>
+                </div>
+              </div>
+
+              <div class="send-confirm-item">
+                <i class="bx bx-receipt"></i>
+                <div>
+                  <span class="send-confirm-label">Comisión</span>
+                  <span class="send-confirm-value" id="confirmCommission"></span>
+                </div>
+              </div>
+
+              <div class="send-alert">
+                <i class="bx bx-info-circle"></i>
+                <p>Esta transferencia requiere aprobación del administrador. Te notificaremos cuando sea procesada.</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Botones de acción -->
+        <div class="send-card-footer">
+          <button class="send-btn send-btn-secondary" id="btnBack" style="display: none;">
+            <i class="bx bx-arrow-back"></i>
+            Atrás
+          </button>
+
+          <button class="send-btn send-btn-primary" id="btnNext">
+            Siguiente
+            <i class="bx bx-arrow-to-right"></i>
+          </button>
+
+          <button class="send-btn send-btn-success" id="btnConfirm" style="display: none;">
+            <i class="bx bx-check-circle"></i>
+            Confirmar Envío
+          </button>
+        </div>
+      </div>
+
+      <!-- Historial de Solicitudes -->
+      <div class="send-history-card">
+        <h3>
+          <i class="bx bx-time"></i>
+          Mis Solicitudes Recientes
+        </h3>
+
+        <div class="send-history-list" id="historyList">
+          <div class="send-loader"></div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- MODAL DE ÉXITO -->
+  <div id="successModal" class="send-modal send-hidden">
+    <div class="send-modal-content send-modal-success">
+      <div class="send-modal-icon">
+        <i class="bx bx-check-circle"></i>
+      </div>
+      <h3>¡Solicitud Enviada!</h3>
+      <p>Tu solicitud de pago ha sido creada exitosamente y está esperando aprobación del administrador.</p>
+      <button class="send-btn send-btn-primary" id="btnCloseSuccess">
+        Entendido
+      </button>
+    </div>
+  </div>
+
+  <!-- JS -->
+  <script src="./js/js-dashboard/sidebar-loader.js" type="module"></script>
+  <script src="./js/js-dashboard/send.js" type="module"></script>
+  <!-- Widget de notificaciones -->
+  <script type="module" src="js/notification-widget.js"></script>
+  <script src="./js/navbar-unified.js"></script>
+<!-- 🔐 SISTEMA DE PERMISOS GLOBAL -->
+<script type="module" src="./js/permissions/init-permissions.js"></script>
+</body>
+</html>

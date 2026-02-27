@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>FLUXI | Inscritos</title>
+
+  <!-- 🔐 VALIDACIÓN DE SESIÓN - EJECUTA ANTES DE RENDERIZAR -->
+  <script>
+    (function() {
+      const token = localStorage.getItem('auth_token');
+      const logoutTime = localStorage.getItem('logout_timestamp');
+      if (!token || logoutTime) {
+        localStorage.clear();
+        window.location.replace('./login.html');
+      }
+    })();
+  </script>
+
+
+  <!-- Boxicons -->
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+
+  <!-- Sidebar -->
+  <link rel="stylesheet" href="./css/css-dashboard/css-sidebar.css" />
+<!-- Estilos del widget -->
+  <link rel="stylesheet" href="css/notification-widget.css">
+  <!-- Notification Widget - Navbar Unificado -->
+  <link rel="stylesheet" href="./css/notification-widget-unified.css" />
+  <!-- Navbar Unificado -->
+  <link rel="stylesheet" href="./css/navbar-unified.css" />
+
+  <!-- Inscritos styles -->
+  <link rel="stylesheet" href="./css/css-dashboard/enrolled.css" />
+</head>
+
+<body>
+  <div class="app-layout">
+
+    <!-- SIDEBAR -->
+    <div id="sidebar-container"></div>
+
+    <!-- MAIN -->
+    <main class="main-content">
+
+      <!-- NAVBAR UNIFICADO -->
+      <header class="fluxi-navbar">
+        <div class="fluxi-navbar-left">
+          <h1 class="fluxi-page-title" id="navbarPageTitle">Inscritos</h1>
+        </div>
+        <div class="fluxi-navbar-brand">
+          <img src="/FRONTEND/assets/fluxi.png" class="fluxi-navbar-brand-logo" alt="FLUXI Logo" />
+        </div>
+        <div class="fluxi-navbar-right">
+          <div class="fluxi-notification-icon" id="navNotificationIcon">
+            <i class="bx bx-bell"></i>
+            <span class="fluxi-notification-badge" id="navNotificationBadge" style="display: none;">0</span>
+          </div>
+          <div class="fluxi-user" id="navUserButton">
+            <img src="./assets/mascota.jpeg" alt="Avatar" class="fluxi-user-avatar" id="navUserAvatar" />
+            <span class="fluxi-username" id="navUsername">Usuario</span>
+            <div class="fluxi-user-menu" id="navUserMenu">
+              <button class="fluxi-user-menu-item" onclick="navigateToProfile()">
+                <i class="bx bx-user"></i>
+                <span>Mi Perfil</span>
+              </button>
+              <button class="fluxi-user-menu-item" onclick="navigateToSettings()">
+                <i class="bx bx-cog"></i>
+                <span>Configuración</span>
+              </button>
+              <div class="fluxi-user-menu-divider"></div>
+              <button class="fluxi-user-menu-item" onclick="logout()" style="color: #f5576c;">
+                <i class="bx bx-log-out"></i>
+                <span>Cerrar Sesión</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- PAGE HEADER -->
+      <section class="page-header">
+        <h1 class="page-title">Destinatarios Inscritos</h1>
+        <p class="page-subtitle">
+          Gestiona tus destinatarios frecuentes para envíos rápidos
+        </p>
+      </section>
+
+      <!-- ACTION BAR -->
+      <section class="inscritos-actions">
+        <button class="primary-btn" id="btnNewEnrolled">
+          <i class="bx bx-user-plus"></i>
+          Inscribir destinatario
+        </button>
+
+        <div class="search-box">
+          <i class="bx bx-search"></i>
+          <input type="text" id="searchInput" placeholder="Buscar destinatario..." />
+        </div>
+      </section>
+
+      <!-- INSCRITOS TABLE -->
+      <section class="inscritos-table">
+
+        <div class="section-header">
+          <h3>Libreta de contactos</h3>
+          <span class="count-badge" id="countBadge">0 destinatarios</span>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Destinatario</th>
+              <th>Email</th>
+              <th>Usuario</th>
+              <th>Wallets Disponibles</th>
+              <th>Fecha registro</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+
+          <tbody id="enrolledTableBody">
+            <tr>
+              <td colspan="6" style="text-align: center; padding: 40px;">
+                <div class="loader"></div>
+                <p style="margin-top: 16px; color: #7f8c8d;">Cargando destinatarios...</p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+      </section>
+
+    </main>
+  </div>
+
+  <!-- MODAL NUEVO INSCRITO -->
+  <div id="enrollModal" class="modal-overlay hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Inscribir nuevo destinatario</h3>
+        <button class="modal-close" id="closeEnrollModal">
+          <i class="bx bx-x"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <p class="modal-info">
+          <i class="bx bx-info-circle"></i>
+          Ingresa el email del usuario registrado en la plataforma
+        </p>
+
+        <div class="form-group">
+          <label>Email del destinatario</label>
+          <input 
+            type="email" 
+            id="recipientEmail" 
+            placeholder="ejemplo@correo.com"
+            autocomplete="off"
+          />
+          <span class="validation-message" id="emailValidation"></span>
+        </div>
+
+        <div class="form-group">
+          <label>Alias (nombre personalizado)</label>
+          <input 
+            type="text" 
+            id="recipientAlias" 
+            placeholder="Ej: Juan - Proveedor"
+            maxlength="50"
+          />
+        </div>
+
+        <div class="user-preview hidden" id="userPreview">
+          <i class="bx bx-user-check"></i>
+          <div>
+            <strong id="previewUsername"></strong>
+            <span id="previewEmail"></span>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button class="btn-cancel" id="cancelEnroll">Cancelar</button>
+          <button class="btn-primary" id="confirmEnroll">
+            <i class="bx bx-plus"></i>
+            Inscribir
+          </button>
+        </div>
+
+        <p class="modal-message" id="enrollMessage"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL EDITAR ALIAS -->
+  <div id="editModal" class="modal-overlay hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Editar alias</h3>
+        <button class="modal-close" id="closeEditModal">
+          <i class="bx bx-x"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Nuevo alias</label>
+          <input 
+            type="text" 
+            id="editAlias" 
+            placeholder="Nombre personalizado"
+            maxlength="50"
+          />
+        </div>
+
+        <div class="modal-actions">
+          <button class="btn-cancel" id="cancelEdit">Cancelar</button>
+          <button class="btn-primary" id="confirmEdit">
+            <i class="bx bx-check"></i>
+            Guardar
+          </button>
+        </div>
+
+        <p class="modal-message" id="editMessage"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL VER WALLETS -->
+  <div id="walletsModal" class="modal-overlay hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>
+          <i class="bx bx-wallet"></i>
+          Wallets Disponibles
+        </h3>
+        <button class="modal-close" id="closeWalletsModal">
+          <i class="bx bx-x"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="wallets-info-header">
+          <div class="recipient-card-compact">
+            <div class="recipient-avatar-small">
+              <span id="walletsRecipientInitials"></span>
+            </div>
+            <div>
+              <strong id="walletsRecipientAlias"></strong>
+              <p id="walletsRecipientEmail"></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="wallets-list" id="walletsList">
+          <div class="loader"></div>
+          <p style="margin-top: 16px; color: #7f8c8d;">Cargando wallets...</p>
+        </div>
+
+        <div class="modal-actions">
+          <button class="btn-cancel" id="closeWallets">Cerrar</button>
+          <button class="btn-primary" id="sendFromWallets">
+            <i class="bx bx-send"></i>
+            Enviar Dinero
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JS -->
+  <script src="./js/js-dashboard/sidebar-loader.js" type="module"></script>
+  <script src="./js/js-dashboard/enrolled.js" type="module"></script>
+  <!-- Widget de notificaciones -->
+  <script type="module" src="js/notification-widget.js"></script>
+  <script src="./js/navbar-unified.js"></script>
+<!-- 🔐 SISTEMA DE PERMISOS GLOBAL -->
+<script type="module" src="./js/permissions/init-permissions.js"></script>
+</body>
+</html>

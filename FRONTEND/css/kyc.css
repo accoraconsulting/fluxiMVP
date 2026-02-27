@@ -1,0 +1,288 @@
+/* =========================
+   BASE
+========================= */
+* {
+  box-sizing: border-box;
+  font-family: Inter, system-ui, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: #f8fafc;
+}
+
+.kyc-page {
+  max-width: 1280px;
+  margin: 80px auto;
+  padding: 0 32px;
+}
+
+.kyc-card-wrap {
+  position: relative;
+}
+
+.kyc-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 32px 40px 40px;
+  box-shadow: 0 12px 40px rgba(0,0,0,.08);
+  overflow: visible;
+}
+
+/* =========================
+   TOP BAR
+========================= */
+.kyc-topbar {
+  display: flex;
+  align-items: center;        /* ← clave */
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: -14px;
+  position: relative;
+}
+
+
+
+/* =========================
+   BRAND CONTAINER
+========================= */
+.kyc-header-row {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.kyc-brand-box {
+  position: relative;  
+  top: -47px;
+  left: -61px;
+  background: #f8fafc;
+  border-radius: 15px;
+  padding: 24px 54px 56px 63px; 
+  width: 320px;
+  overflow: hidden; 
+}
+
+/* Texto "Registro" */
+.kyc-brand-title {
+  background: #f8fafc;
+  border-radius: 14px;
+  margin-right: -10px;
+}
+
+.kyc-title {
+  font-size: 31px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+/* Logo decorativo */
+
+/* Logo decorativo */
+.kyc-brand-logo {
+  position: absolute;
+  bottom: 10px;   /* sale más */
+  right: 30px;    /* entra más al card */
+  z-index: 1;
+}
+
+.kyc-brand-logo img {
+  width: 150px;
+  opacity: 0.95;
+}
+
+
+
+/* =========================
+   PROGRESS STEPS
+========================= */
+.kyc-progress {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  gap: 0;
+}
+
+
+.progress-step {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 210px;          /* fija la columna */
+  text-align: center;
+  gap: 10px;
+
+  font-size: 16px;
+  color: #9ca3af;
+}
+
+/* LINE BETWEEN STEPS */
+.progress-step::after {
+  content: '';
+  position: absolute;
+  top: 5px;            /* eje Y exacto de los dots */
+  left: 50%;
+  width: 205px;
+  height: 5px;
+  background: #e5e7eb;
+  transform: translateX(0);
+  z-index: 0;
+}
+
+.progress-step.completed::after {
+  background: linear-gradient(90deg, #6366f1, #4f46e5);
+}
+
+.progress-step:last-child::after {
+  display: none;
+}
+
+
+/* DOT */
+.step-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #d1d5db;
+  position: relative;
+  z-index: 2;
+}
+
+/* ACTIVE */
+.progress-step.active {
+  color: #682fd6;
+  font-weight: 500;
+}
+
+.progress-step.active .step-dot {
+  background: #682fd6;
+  box-shadow: 0 0 0 4px rgba(79,70,229,0.15);
+}
+
+
+/* =========================
+   CONTENT AREA
+========================= */
+.kyc-content {
+  min-height: 360px;
+  overflow: hidden;
+}
+
+#step-container {
+  transition: transform 0.4s ease, opacity 0.3s ease;
+}
+
+/* =========================
+   FORM GRID
+========================= */
+.kyc-form-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+/* INPUTS */
+.kyc-input {
+  display: flex;
+  flex-direction: column;
+}
+
+
+.kyc-input label {
+  font-size: 11px;
+  color: #9ca3af;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+
+.kyc-input input {
+  height: 40px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  padding: 0 14px;
+  font-size: 14px;
+  background: #ffffff;
+}
+
+.kyc-input input[type="date"] {
+  padding-right: 12px;
+}
+
+.kyc-input select {
+  height: 40px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  padding: 0 38px 0 14px;
+  font-size: 14px;
+  background: #ffffff;
+  color: #1f2937;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+}
+/*flecha para tipo de doc*/
+.kyc-input select {
+  background-image: url("data:image/svg+xml,%3Csvg fill='none' stroke='%239ca3af' stroke-width='2' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+}
+
+.kyc-input select:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 2px rgba(99,102,241,0.15);
+}
+
+/* =========================
+   DECLARATIONS
+========================= */
+.kyc-declarations {
+  display: flex;
+  gap: 32px;
+  margin-top: 28px;
+  padding-top: 16px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.kyc-checkbox {
+  font-size: 13px;
+  color: #475569;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* =========================
+   ACTIONS
+========================= */
+.kyc-actions {
+  margin-top: 32px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.kyc-btn {
+  background: linear-gradient(135deg, #6b2fd6, #1f86d9);
+  color: #ffffff;
+  border: none;
+  border-radius: 999px;
+  padding: 10px 28px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.kyc-btn.secondary {
+  background: #f1f5f9;
+  color: #1f2937;
+}
+
+.kyc-btn.secondary1 {
+  background: #4fc18e;
+  color: #000000;
+}
+

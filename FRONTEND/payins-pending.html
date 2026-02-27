@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FLUXI | Payins Pendientes de Aprobación</title>
+
+  <!-- 🔐 VALIDACIÓN DE SESIÓN - EJECUTA ANTES DE RENDERIZAR -->
+  <script>
+    (function() {
+      const token = localStorage.getItem('auth_token');
+      const logoutTime = localStorage.getItem('logout_timestamp');
+      if (!token || logoutTime) {
+        localStorage.clear();
+        window.location.replace('./login.html');
+      }
+    })();
+  </script>
+
+  <!-- Boxicons -->
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+
+  <!-- Sidebar CSS -->
+  <link rel="stylesheet" href="./css/css-dashboard/css-sidebar.css" />
+
+  <!-- Notification Widget -->
+  <link rel="stylesheet" href="css/notification-widget.css">
+  <link rel="stylesheet" href="./css/notification-widget-unified.css" />
+
+  <!-- Navbar Unificado -->
+  <link rel="stylesheet" href="./css/navbar-unified.css" />
+
+  <!-- Payins CSS -->
+  <link rel="stylesheet" href="./css/payins.css" />
+</head>
+
+<body>
+  <div class="app-layout">
+
+    <!-- ═════════════════════════════════════════════════════════════ -->
+    <!-- SIDEBAR -->
+    <!-- ═════════════════════════════════════════════════════════════ -->
+    <div id="sidebar-container"></div>
+
+    <!-- ═════════════════════════════════════════════════════════════ -->
+    <!-- MAIN CONTENT -->
+    <!-- ═════════════════════════════════════════════════════════════ -->
+    <main class="main-content">
+
+      <!-- NAVBAR UNIFICADO -->
+      <header class="fluxi-navbar">
+        <div class="fluxi-navbar-left">
+          <h1 class="fluxi-page-title">Payins Pendientes de Aprobación</h1>
+        </div>
+        <div class="fluxi-navbar-brand">
+          <img src="/FRONTEND/assets/fluxi.png" class="fluxi-navbar-brand-logo" alt="FLUXI Logo" />
+        </div>
+        <div class="fluxi-navbar-right">
+          <div class="fluxi-notification-icon" id="navNotificationIcon">
+            <i class="bx bx-bell"></i>
+            <span class="fluxi-notification-badge" id="navNotificationBadge" style="display: none;">0</span>
+          </div>
+          <div class="fluxi-user" id="navUserButton">
+            <img src="./assets/mascota.jpeg" alt="Avatar" class="fluxi-user-avatar" />
+            <span class="fluxi-username" id="navUsername">Usuario</span>
+            <div class="fluxi-user-menu" id="navUserMenu">
+              <button class="fluxi-user-menu-item" onclick="navigateToProfile()">
+                <i class="bx bx-user"></i>
+                <span>Mi Perfil</span>
+              </button>
+              <button class="fluxi-user-menu-item" onclick="navigateToSettings()">
+                <i class="bx bx-cog"></i>
+                <span>Configuración</span>
+              </button>
+              <div class="fluxi-user-menu-divider"></div>
+              <button class="fluxi-user-menu-item" onclick="logout()" style="color: #f5576c;">
+                <i class="bx bx-log-out"></i>
+                <span>Cerrar Sesión</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- ═════════════════════════════════════════════════════════════ -->
+      <!-- CONTENIDO PRINCIPAL -->
+      <!-- ═════════════════════════════════════════════════════════════ -->
+      <div class="payins-container">
+
+        <!-- 📊 ESTADÍSTICAS RÁPIDAS -->
+        <div class="payins-stats-row">
+          <div class="stat-card">
+            <div class="stat-icon" style="background: linear-gradient(135deg, #ffa751 0%, #ffe259 100%);">
+              <i class="bx bx-time-five"></i>
+            </div>
+            <div class="stat-content">
+              <h4>Pendientes</h4>
+              <p class="stat-value" id="statsPendingCount">0</p>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+              <i class="bx bx-user"></i>
+            </div>
+            <div class="stat-content">
+              <h4>Usuarios</h4>
+              <p class="stat-value" id="statsUsersCount">0</p>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+              <i class="bx bx-dollar-circle"></i>
+            </div>
+            <div class="stat-content">
+              <h4>Monto Total</h4>
+              <p class="stat-value" id="statsTotalAmount">$0</p>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+              <i class="bx bx-hourglass"></i>
+            </div>
+            <div class="stat-content">
+              <h4>Tiempo Promedio</h4>
+              <p class="stat-value" id="statsAverageTime">0h</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 📋 SECCIÓN PAYINS PENDIENTES -->
+        <div class="payins-card">
+          <div class="payins-card-header">
+            <div class="header-content">
+              <i class="bx bx-list-check"></i>
+              <h2>Cola de Aprobación</h2>
+              <p>Revisa y aprueba/rechaza los links de pago pendientes</p>
+            </div>
+            <div class="header-actions">
+              <button type="button" class="btn btn-secondary btn-sm" id="btnRefreshPending">
+                <i class="bx bx-refresh"></i>
+                Actualizar
+              </button>
+            </div>
+          </div>
+
+          <div class="payins-card-body">
+            <!-- Loading Spinner -->
+            <div class="loading-spinner" id="loadingPending" style="display: none;">
+              <div class="spinner"></div>
+              <p>Cargando payins pendientes...</p>
+            </div>
+
+            <!-- Tabla de Payins Pendientes -->
+            <div class="payins-pending-grid" id="payinsPendingGrid" style="display: none;">
+              <!-- Tarjetas se cargan dinámicamente -->
+            </div>
+
+            <!-- Empty State -->
+            <div class="empty-state" id="emptyPending" style="display: none;">
+              <div class="empty-icon">
+                <i class="bx bx-check-circle"></i>
+              </div>
+              <h3>No hay payins pendientes</h3>
+              <p>¡Todos los payins están aprobados! 🎉</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ═════════════════════════════════════════════════════════════ -->
+  <!-- MODAL: CONFIRMAR APROBACIÓN -->
+  <!-- ═════════════════════════════════════════════════════════════ -->
+  <div class="modal" id="modalConfirmarAprobacion">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Confirmar Aprobación de Payin</h3>
+        <button type="button" class="modal-close" onclick="cerrarModal('modalConfirmarAprobacion')">
+          <i class="bx bx-x"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="confirmation-details">
+          <p><strong>Usuario:</strong> <span id="approveUserName"></span></p>
+          <p><strong>Monto:</strong> <span id="approveMonto"></span></p>
+          <p><strong>Moneda:</strong> <span id="approveMoneda"></span></p>
+          <p><strong>País:</strong> <span id="approvePais"></span></p>
+          <p><strong>Método:</strong> <span id="approveMetodo"></span></p>
+          <p class="confirmation-warning">
+            <i class="bx bx-info-circle"></i>
+            Al aprobar, se generará un link de pago en Vitawallet que el usuario podrá usar para completar la transacción.
+          </p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="cerrarModal('modalConfirmarAprobacion')">
+          Cancelar
+        </button>
+        <button type="button" class="btn btn-success" id="btnConfirmarAprobacion">
+          <i class="bx bx-check"></i>
+          Aprobar Payin
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═════════════════════════════════════════════════════════════ -->
+  <!-- MODAL: CONFIRMAR RECHAZO -->
+  <!-- ═════════════════════════════════════════════════════════════ -->
+  <div class="modal" id="modalConfirmarRechazo">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Rechazar Payin</h3>
+        <button type="button" class="modal-close" onclick="cerrarModal('modalConfirmarRechazo')">
+          <i class="bx bx-x"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="confirmation-details">
+          <p><strong>Usuario:</strong> <span id="rejectUserName"></span></p>
+          <p><strong>Monto:</strong> <span id="rejectMonto"></span></p>
+          <p class="confirmation-warning">
+            <i class="bx bx-info-circle"></i>
+            El usuario será notificado del rechazo. Opcionalmente puedes indicar una razón.
+          </p>
+          <div class="form-group" style="margin-top: 15px;">
+            <label for="inputRazonRechazo">Razón del Rechazo (Opcional)</label>
+            <textarea
+              id="inputRazonRechazo"
+              class="form-control"
+              placeholder="Ej: Información incompleta, verificación fallida, etc..."
+              rows="3"
+            ></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="cerrarModal('modalConfirmarRechazo')">
+          Cancelar
+        </button>
+        <button type="button" class="btn btn-danger" id="btnConfirmarRechazo">
+          <i class="bx bx-x"></i>
+          Rechazar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═════════════════════════════════════════════════════════════ -->
+  <!-- MODAL: VER DETALLES COMPLETOS -->
+  <!-- ═════════════════════════════════════════════════════════════ -->
+  <div class="modal" id="modalPayinPendingDetail">
+    <div class="modal-content modal-lg">
+      <div class="modal-header">
+        <h3>Detalles del Payin</h3>
+        <button type="button" class="modal-close" onclick="cerrarModal('modalPayinPendingDetail')">
+          <i class="bx bx-x"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="payin-detail-content" id="payinDetailContent">
+          <!-- Se carga dinámicamente -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═════════════════════════════════════════════════════════════ -->
+  <!-- SCRIPTS -->
+  <!-- ═════════════════════════════════════════════════════════════ -->
+
+  <!-- Navbar Unificado -->
+  <script src="./js/navbar-unified.js"></script>
+
+  <!-- Notification Widget -->
+  <script type="module" src="./js/notification-widget.js"></script>
+
+  <!-- Permisos y Guard de rutas -->
+  <script type="module">
+    import { guardRoute } from './js/permissions/route-guard.js';
+    import { initializePermissions } from './js/permissions/navbar-updater.js';
+
+    // Proteger esta ruta para admins
+    guardRoute('payins');
+    initializePermissions();
+  </script>
+
+  <!-- Sidebar Loader - CRÍTICO para mostrar sidebar -->
+  <script src="./js/js-dashboard/sidebar-loader.js"></script>
+
+  <!-- 🔌 Real-time Service - Actualizaciones en tiempo real -->
+  <script type="module" src="./js/services/payin-realtime.service.js"></script>
+
+  <!-- Lógica de Payins Pendientes -->
+  <script src="./js/handlers/payin-pending.js"></script>
+  <script src="./js/services/payin.service.js"></script>
+
+  <!-- 🔐 SISTEMA DE PERMISOS GLOBAL -->
+  <script type="module" src="./js/permissions/init-permissions.js"></script>
+</body>
+</html>

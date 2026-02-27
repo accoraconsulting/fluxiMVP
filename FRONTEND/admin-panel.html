@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FLUXI | Panel de Administración</title>
+
+  <!-- 🔐 VALIDACIÓN DE SESIÓN - EJECUTA ANTES DE RENDERIZAR -->
+  <script>
+    (function() {
+      const token = localStorage.getItem('auth_token');
+      const logoutTime = localStorage.getItem('logout_timestamp');
+      if (!token || logoutTime) {
+        localStorage.clear();
+        window.location.replace('./login.html');
+      }
+    })();
+  </script>
+
+
+  <!-- Boxicons -->
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+
+  <!-- Sidebar CSS -->
+  <link rel="stylesheet" href="./css/css-dashboard/css-sidebar.css" />
+  <!-- Estilos del widget -->
+  <link rel="stylesheet" href="css/notification-widget.css">  
+
+  <!-- Admin Panel CSS -->
+  <link rel="stylesheet" href="./css/css-dashboard/admin-panel.css" />
+</head>
+
+<body>
+  <div class="admin-app-layout">
+
+    <!-- SIDEBAR -->
+    <div id="sidebar-container"></div>
+
+    <!-- MAIN CONTENT -->
+    <main class="admin-main-content">
+
+      <!-- TOPBAR -->
+      <header class="admin-topbar">
+        <div class="admin-topbar-left">
+          <h1 class="admin-page-title">Panel de Administración</h1>
+        </div>
+
+        <div class="admin-brand">
+          <img src="/FRONTEND/assets/fluxi.png" class="admin-brand-logo" />
+        </div>
+
+      
+       <div class="topbar-right">
+          <div class="notification">
+           
+          </div>
+          
+          <div class="admin-user">
+            <span class="admin-username" data-user-name></span>
+            <img src="./assets/mascota.jpeg" />
+          </div>
+        </div>
+      </header>
+
+      <!-- STATS GRID -->
+      <section class="admin-stats-grid">
+        <div class="admin-stat-card admin-users">
+          <div class="admin-stat-icon">
+            <i class="bx bx-user"></i>
+          </div>
+          <div class="admin-stat-content">
+            <span class="admin-stat-label">Total Usuarios</span>
+            <h2 class="admin-stat-value" id="totalUsers">0</h2>
+          </div>
+        </div>
+
+        <div class="admin-stat-card admin-wallets">
+          <div class="admin-stat-icon">
+            <i class="bx bx-wallet"></i>
+          </div>
+          <div class="admin-stat-content">
+            <span class="admin-stat-label">Wallets Activas</span>
+            <h2 class="admin-stat-value" id="totalWallets">0</h2>
+          </div>
+        </div>
+
+        <div class="admin-stat-card admin-transactions">
+          <div class="admin-stat-icon">
+            <i class="bx bx-transfer"></i>
+          </div>
+          <div class="admin-stat-content">
+            <span class="admin-stat-label">Total Transacciones</span>
+            <h2 class="admin-stat-value" id="totalTransactions">0</h2>
+          </div>
+        </div>
+
+        <div class="admin-stat-card admin-commissions">
+          <div class="admin-stat-icon">
+            <i class="bx bx-dollar-circle"></i>
+          </div>
+          <div class="admin-stat-content">
+            <span class="admin-stat-label">Comisiones (USD)</span>
+            <h2 class="admin-stat-value" id="totalCommissions">$0</h2>
+          </div>
+        </div>
+      </section>
+
+        <!-- TABS NAVIGATION -->
+        <section class="admin-tabs">
+          <button class="admin-tab active" data-tab="dashboard">
+            <i class="bx bx-home"></i>
+            Dashboard
+          </button>
+          <button class="admin-tab" data-tab="payments">
+            <i class="bx bx-credit-card"></i>
+            Solicitudes de Pago
+            <span class="admin-tab-badge" id="pendingPaymentsBadge">0</span>
+          </button>
+          <button class="admin-tab" data-tab="users">
+            <i class="bx bx-user"></i>
+            Usuarios
+          </button>
+          <button class="admin-tab" data-tab="transactions">
+            <i class="bx bx-transfer"></i>
+            Transacciones
+          </button>
+          <button class="admin-tab" data-tab="commissions">
+            <i class="bx bx-dollar"></i>
+            Comisiones
+          </button>
+          <button class="admin-tab" data-tab="system">
+            <i class="bx bx-cog"></i>
+            Sistema
+          </button>
+        </section>
+
+
+<!-- TAB CONTENT: DASHBOARD -->
+<section class="admin-tab-content active" id="tab-dashboard">
+  
+  <!-- Alertas de solicitudes pendientes -->
+  <div class="admin-alert-box" id="pendingPaymentsAlert" style="display: none;">
+    <div class="admin-alert-icon">
+      <i class="bx bx-bell-ring"></i>
+    </div>
+    <div class="admin-alert-content">
+      <h4>Tienes solicitudes de pago pendientes</h4>
+      <p>Hay <strong id="pendingPaymentsCount">0</strong> solicitudes esperando tu aprobación.</p>
+    </div>
+    <button class="admin-btn-alert" onclick="switchTab('payments')">
+      Ver Solicitudes
+      <i class="bx bx-arrow-to-right"></i>
+    </button>
+  </div>
+
+  <!-- Resumen rápido -->
+  <div class="admin-quick-summary">
+    <h3>
+      <i class="bx bx-pie-chart-alt"></i>
+      Resumen de Actividad
+    </h3>
+
+    <div class="admin-summary-grid">
+       <button class="modern-refresh-btn" data-refresh="dashboard" onclick="refreshDashboard()">
+          <i class="bx bx-refresh"></i>
+          Actualizar
+        </button>
+      <div class="admin-summary-card">
+        <div class="admin-summary-icon blue">
+          <i class="bx bx-credit-card"></i>
+        </div>
+        <div class="admin-summary-info">
+          <span class="admin-summary-label">Solicitudes Pendientes</span>
+          <span class="admin-summary-value" id="dashPendingPayments">0</span>
+        </div>
+      </div>
+
+      <div class="admin-summary-card">
+        <div class="admin-summary-icon green">
+          <i class="bx bx-check-circle"></i>
+        </div>
+        <div class="admin-summary-info">
+          <span class="admin-summary-label">Aprobadas Hoy</span>
+          <span class="admin-summary-value" id="dashApprovedToday">0</span>
+        </div>
+      </div>
+
+      <div class="admin-summary-card">
+        <div class="admin-summary-icon red">
+          <i class="bx bx-x-circle"></i>
+        </div>
+        <div class="admin-summary-info">
+          <span class="admin-summary-label">Rechazadas Hoy</span>
+          <span class="admin-summary-value" id="dashRejectedToday">0</span>
+        </div>
+      </div>
+
+      <div class="admin-summary-card">
+        <div class="admin-summary-icon purple">
+          <i class="bx bx-dollar-circle"></i>
+        </div>
+        <div class="admin-summary-info">
+          <span class="admin-summary-label">Volumen Procesado Hoy</span>
+          <span class="admin-summary-value" id="dashVolumeToday">$0</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Últimas solicitudes -->
+  <div class="admin-recent-payments">
+    <h3>
+      <i class="bx bx-time"></i>
+      Últimas Solicitudes
+    </h3>
+
+    <div class="admin-table-container">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>De</th>
+            <th>Para</th>
+            <th>Monto</th>
+            <th>Estado</th>
+            <th>Fecha</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="recentPaymentsTableBody">
+          <tr>
+            <td colspan="6" style="text-align: center; padding: 40px;">
+              <div class="admin-loader"></div>
+              <p style="margin-top: 16px; color: #7f8c8d;">Cargando solicitudes...</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</section>
+
+      <!-- TAB CONTENT: SOLICITUDES DE PAGO -->
+      <section class="admin-tab-content" id="tab-payments">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+            <h2><i class="bx bx-credit-card"></i> Solicitudes de Pago</h2>
+            <button class="modern-refresh-btn" data-refresh="payments" onclick="refreshPayments()">
+              <i class="bx bx-refresh"></i>
+              Actualizar
+            </button>
+          </div>
+        
+        <div class="admin-filters-bar">
+          <div class="admin-filter-group">
+            <select id="filterPaymentStatus">
+              <option value="">Todos los estados</option>
+              <option value="pending">Pendientes</option>
+              <option value="approved">Aprobadas</option>
+              <option value="rejected">Rechazadas</option>
+              <option value="failed">Fallidas</option>
+            </select>
+
+            <button class="admin-btn-refresh" id="btnRefreshPayments">
+              <i class="bx bx-refresh"></i>
+              Actualizar
+            </button>
+          </div>
+        </div>
+
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Remitente</th>
+                <th>Destinatario</th>
+                <th>Monto</th>
+                <th>Conversión</th>
+                <th>Comisión</th>
+                <th>Estado</th>
+                <th>Fecha</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="paymentsTableBody">
+              <tr>
+                <td colspan="9" style="text-align: center; padding: 40px;">
+                  <div class="admin-loader"></div>
+                  <p style="margin-top: 16px; color: #7f8c8d;">Cargando solicitudes...</p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div id="payments-pagination"></div>
+
+
+        </div>
+
+      </section>
+
+
+      <!-- TAB CONTENT: USUARIOS -->
+      <section class="admin-tab-content" id="tab-users">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+            <h2><i class="bx bx-user"></i> Gestión de Usuarios</h2>
+            <button class="modern-refresh-btn" data-refresh="users" onclick="refreshUsers()">
+              <i class="bx bx-refresh"></i>
+              Actualizar
+            </button>
+          </div>
+          <!-- Filters -->
+        <div class="admin-filters-bar">
+          <div class="admin-search-box">
+            <i class="bx bx-search"></i>
+            <input type="text" id="searchUsers" placeholder="Buscar por email o username..." />
+          </div>
+
+          <div class="admin-filter-group">
+            <select id="filterRole">
+              <option value="">Todos los roles</option>
+              <option value="fluxiUser">Usuarios</option>
+              <option value="fluxiDocs">Docs</option>
+              <option value="fluxiDev">Dev</option>
+              <option value="fluxiAdmin">Admin</option>
+            </select>
+
+            <select id="filterKYC">
+              <option value="">Todos KYC</option>
+              <option value="approved">Aprobado</option>
+              <option value="pending">Pendiente</option>
+              <option value="rejected">Rechazado</option>
+            </select>
+
+            <select id="filterStatus">
+              <option value="">Todos los estados</option>
+              <option value="active">Activo</option>
+              <option value="blocked">Bloqueado</option>
+              <option value="suspended">Suspendido</option>
+            </select>
+
+            <button class="admin-btn-refresh" id="btnRefreshUsers">
+              <i class="bx bx-refresh"></i>
+              Actualizar
+            </button>
+          </div>
+        </div>
+
+        <!-- Users Table -->
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Usuario</th>
+                <th>Rol</th>
+                <th>KYC</th>
+                <th>Estado</th>
+                <th>Wallets</th>
+                <th>Registro</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="usersTableBody">
+              <tr>
+                <td colspan="7" style="text-align: center; padding: 40px;">
+                  <div class="admin-loader"></div>
+                  <p style="margin-top: 16px; color: #7f8c8d;">Cargando usuarios...</p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div id="users-pagination"></div>
+
+        </div>
+
+      </section>
+
+      <!-- TAB CONTENT: TRANSACCIONES -->
+      <section class="admin-tab-content" id="tab-transactions">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                <h2><i class="bx bx-transfer"></i> Historial de Transacciones</h2>
+                <button class="modern-refresh-btn" data-refresh="transactions" onclick="refreshTransactions()">
+                  <i class="bx bx-refresh"></i>
+                  Actualizar
+                </button>
+              </div>
+        <div class="admin-filters-bar">
+          <div class="admin-search-box">
+            <i class="bx bx-search"></i>
+            <input type="text" id="searchTransactions" placeholder="Buscar por hash o usuario..." />
+          </div>
+
+          <div class="admin-filter-group">
+            <select id="filterCurrency">
+              <option value="">Todas las monedas</option>
+              <option value="USD">USD</option>
+              <option value="EUR">EUR</option>
+              <option value="COP">COP</option>
+              <option value="BTC">BTC</option>
+              <option value="ETH">ETH</option>
+              <option value="USDT">USDT</option>
+            </select>
+
+            <button class="admin-btn-refresh" id="btnRefreshTx">
+              <i class="bx bx-refresh"></i>
+              Actualizar
+            </button>
+          </div>
+        </div>
+
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Hash</th>
+                <th>Usuario</th>
+                <th>Monto</th>
+                <th>Moneda</th>
+                <th>Estado</th>
+                <th>Fecha</th>
+              </tr>
+            </thead>
+            <tbody id="transactionsTableBody">
+              <tr>
+                <td colspan="6" style="text-align: center; padding: 40px;">
+                  <div class="admin-loader"></div>
+                  <p style="margin-top: 16px; color: #7f8c8d;">Cargando transacciones...</p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div id="transactions-pagination"></div>
+
+        </div>
+
+      </section>
+
+      <!-- TAB CONTENT: COMISIONES -->
+      <section class="admin-tab-content" id="tab-commissions">
+        
+        <div class="admin-commissions-grid">
+          <!-- Se llenará dinámicamente -->
+        </div>
+
+        <div class="admin-table-container" style="margin-top: 24px;">
+          <h3 style="margin-bottom: 16px;">Historial de Comisiones</h3>
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Monto</th>
+                <th>Moneda</th>
+                <th>Tipo</th>
+                <th>Usuario</th>
+                <th>Balance Sistema</th>
+              </tr>
+            </thead>
+            <tbody id="commissionsTableBody">
+              <tr>
+                <td colspan="6" style="text-align: center; padding: 40px;">
+                  <div class="admin-loader"></div>
+                  <p style="margin-top: 16px; color: #7f8c8d;">Cargando comisiones...</p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </section>
+
+      <!-- TAB CONTENT: SISTEMA -->
+      <section class="admin-tab-content" id="tab-system">
+
+        <!-- SYSTEM INFO CARD -->
+        <div class="admin-system-info">
+          <h3>Información del Sistema</h3>
+
+          <div class="admin-detail-grid">
+            <div class="admin-detail-field">
+              <span class="admin-detail-label">Wallet del Sistema (USD)</span>
+              <span class="admin-detail-value" id="systemWalletUSD">$0.00</span>
+            </div>
+
+            <div class="admin-detail-field">
+              <span class="admin-detail-label">Wallet del Sistema (EUR)</span>
+              <span class="admin-detail-value" id="systemWalletEUR">€0.00</span>
+            </div>
+
+            <div class="admin-detail-field">
+              <span class="admin-detail-label">Wallet del Sistema (COP)</span>
+              <span class="admin-detail-value" id="systemWalletCOP">$0.00</span>
+            </div>
+
+            <div class="admin-detail-field">
+              <span class="admin-detail-label">Total de usuarios</span>
+              <span class="admin-detail-value" id="systemTotalUsers">0</span>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+    </main>
+  </div>
+
+  <!-- MODAL DE DETALLE DE USUARIO -->
+  <div id="userDetailModal" class="admin-modal admin-hidden">
+    <div class="admin-modal-content">
+      <div class="admin-modal-header">
+        <h3>Detalles del Usuario</h3>
+        <button class="admin-modal-close" id="closeUserModal">
+          <i class="bx bx-x"></i>
+        </button>
+      </div>
+
+      <div class="admin-modal-body" id="userDetailContent">
+        <!-- Se llenará dinámicamente -->
+      </div>
+    </div>
+  </div>
+
+
+
+<!-- MODAL DE DETALLE DE PAGO -->
+<div id="paymentDetailModal" class="admin-modal admin-hidden">
+  <div class="admin-modal-content admin-modal-large">
+    <div class="admin-modal-header">
+      <h3>Detalle de Solicitud de Pago</h3>
+      <button class="admin-modal-close" id="closePaymentModal">
+        <i class="bx bx-x"></i>
+      </button>
+    </div>
+
+    <div class="admin-modal-body" id="paymentDetailContent">
+      <!-- Se llenará dinámicamente -->
+    </div>
+
+    <div class="admin-modal-footer" id="paymentModalFooter">
+      <!-- Botones de acción -->
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DE CONFIRMACIÓN DE RECHAZO -->
+<div id="rejectModal" class="admin-modal admin-hidden">
+  <div class="admin-modal-content">
+    <div class="admin-modal-header admin-modal-header-warning">
+      <h3>Rechazar Solicitud</h3>
+      <button class="admin-modal-close" id="closeRejectModal">
+        <i class="bx bx-x"></i>
+      </button>
+    </div>
+
+    <div class="admin-modal-body">
+      <p style="margin-bottom: 20px; color: #64748b;">
+        ¿Estás seguro de que deseas rechazar esta solicitud?
+      </p>
+
+      <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #1e293b;">
+        Motivo del rechazo (opcional):
+      </label>
+      <textarea 
+        id="rejectionReason" 
+        rows="4"
+        style="width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px; font-family: inherit; resize: vertical;"
+        placeholder="Ejemplo: Saldo insuficiente, datos incorrectos, etc."
+      ></textarea>
+    </div>
+
+    <div class="admin-modal-footer">
+      <button class="admin-btn-secondary" id="btnCancelReject">
+        Cancelar
+      </button>
+      <button class="admin-btn-danger" id="btnConfirmReject">
+        <i class="bx bx-x-circle"></i>
+        Rechazar Solicitud
+      </button>
+    </div>
+  </div>
+</div>
+
+
+
+
+<!-- =============================================
+     MODALES MODERNOS - ESTILO FLUTTER
+     
+     ============================================= -->
+
+<!-- MODAL: Confirmar Aprobación de Pago -->
+<div class="modern-modal" id="confirmApproveModal">
+  <div class="modern-modal-backdrop" onclick="closeConfirmApproveModal()"></div>
+  <div class="modern-modal-card">
+    <div class="modern-modal-header">
+      <div class="modern-modal-icon success">
+        <i class="bx bx-check-circle"></i>
+      </div>
+      <h3>¿Aprobar esta solicitud?</h3>
+      <button class="modern-modal-close" onclick="closeConfirmApproveModal()">
+        <i class="bx bx-x"></i>
+      </button>
+    </div>
+    
+    <div class="modern-modal-body">
+      <p>Estás a punto de aprobar un pago de:</p>
+      <div class="modern-modal-highlight">
+        <span class="modern-modal-amount" id="approveAmount">$0.00 USD</span>
+        <span class="modern-modal-detail">
+          De: <strong id="approveSender">usuario@email.com</strong><br>
+          Para: <strong id="approveRecipient">destinatario@email.com</strong>
+        </span>
+      </div>
+      <p class="modern-modal-warning">
+        <i class="bx bx-info-circle"></i>
+        Esta acción ejecutará la transferencia inmediatamente y no se puede deshacer.
+      </p>
+    </div>
+    
+    <div class="modern-modal-footer">
+      <button class="modern-btn secondary" onclick="closeConfirmApproveModal()">
+        Cancelar
+      </button>
+      <button class="modern-btn primary" id="confirmApproveBtn" onclick="executeApproval()">
+        <i class="bx bx-check"></i>
+        Aprobar Pago
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Confirmar Rechazo de Pago -->
+<div class="modern-modal" id="confirmRejectModal">
+  <div class="modern-modal-backdrop" onclick="closeConfirmRejectModal()"></div>
+  <div class="modern-modal-card">
+    <div class="modern-modal-header">
+      <div class="modern-modal-icon danger">
+        <i class="bx bx-x-circle"></i>
+      </div>
+      <h3>¿Rechazar esta solicitud?</h3>
+      <button class="modern-modal-close" onclick="closeConfirmRejectModal()">
+        <i class="bx bx-x"></i>
+      </button>
+    </div>
+    
+    <div class="modern-modal-body">
+      <p>Estás a punto de rechazar un pago de:</p>
+      <div class="modern-modal-highlight danger">
+        <span class="modern-modal-amount" id="rejectAmount">$0.00 USD</span>
+        <span class="modern-modal-detail">
+          De: <strong id="rejectSender">usuario@email.com</strong><br>
+          Para: <strong id="rejectRecipient">destinatario@email.com</strong>
+        </span>
+      </div>
+      
+      <div class="modern-form-group">
+        <label>Motivo del rechazo (opcional):</label>
+        <textarea 
+          id="rejectReasonInput" 
+          rows="3" 
+          placeholder="Ej: Saldo insuficiente, transacción sospechosa, etc."
+          class="modern-textarea"
+        ></textarea>
+      </div>
+    </div>
+    
+    <div class="modern-modal-footer">
+      <button class="modern-btn secondary" onclick="closeConfirmRejectModal()">
+        Cancelar
+      </button>
+      <button class="modern-btn danger" id="confirmRejectBtn" onclick="executeRejection()">
+        <i class="bx bx-x"></i>
+        Rechazar Pago
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Confirmar Bloqueo/Desbloqueo de Usuario -->
+<div class="modern-modal" id="confirmBlockUserModal">
+  <div class="modern-modal-backdrop" onclick="closeConfirmBlockUserModal()"></div>
+  <div class="modern-modal-card">
+    <div class="modern-modal-header">
+      <div class="modern-modal-icon warning">
+        <i class="bx bx-block"></i>
+      </div>
+      <h3>¿Bloquear este usuario?</h3>
+      <button class="modern-modal-close" onclick="closeConfirmBlockUserModal()">
+        <i class="bx bx-x"></i>
+      </button>
+    </div>
+    
+    <div class="modern-modal-body">
+      <p>Estás a punto de bloquear a:</p>
+      <div class="modern-modal-highlight warning">
+        <strong id="blockUserEmail">usuario@email.com</strong>
+      </div>
+      <p class="modern-modal-warning">
+        <i class="bx bx-info-circle"></i>
+        El usuario no podrá acceder a la plataforma hasta que lo desbloquees.
+      </p>
+    </div>
+    
+    <div class="modern-modal-footer">
+      <button class="modern-btn secondary" onclick="closeConfirmBlockUserModal()">
+        Cancelar
+      </button>
+      <button class="modern-btn warning" id="confirmBlockUserBtn" onclick="executeBlockUser()">
+        <i class="bx bx-block"></i>
+        Bloquear Usuario
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Mensaje de Éxito -->
+<div class="modern-modal" id="successModal">
+  <div class="modern-modal-backdrop" onclick="closeSuccessModal()"></div>
+  <div class="modern-modal-card small">
+    <div class="modern-modal-header">
+      <div class="modern-modal-icon success pulse">
+        <i class="bx bx-check-circle"></i>
+      </div>
+      <h3 id="successTitle">¡Operación exitosa!</h3>
+    </div>
+    
+    <div class="modern-modal-body">
+      <p id="successMessage">La acción se completó correctamente.</p>
+    </div>
+    
+    <div class="modern-modal-footer">
+      <button class="modern-btn primary" onclick="closeSuccessModal()">
+        Entendido
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Mensaje de Error -->
+<div class="modern-modal" id="errorModal">
+  <div class="modern-modal-backdrop" onclick="closeErrorModal()"></div>
+  <div class="modern-modal-card small">
+    <div class="modern-modal-header">
+      <div class="modern-modal-icon danger shake">
+        <i class="bx bx-error-circle"></i>
+      </div>
+      <h3>Error</h3>
+    </div>
+    
+    <div class="modern-modal-body">
+      <p id="errorMessage">Ocurrió un error inesperado.</p>
+    </div>
+    
+    <div class="modern-modal-footer">
+      <button class="modern-btn danger" onclick="closeErrorModal()">
+        Cerrar
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Loading -->
+<div class="modern-modal" id="loadingModal">
+  <div class="modern-modal-backdrop"></div>
+  <div class="modern-modal-card small">
+    <div class="modern-modal-body center">
+      <div class="modern-spinner"></div>
+      <p id="loadingMessage">Procesando...</p>
+    </div>
+  </div>
+</div>
+
+  <!-- JS -->
+  <script src="./js/js-dashboard/sidebar-loader.js" type="module"></script>
+  <script src="./js/js-dashboard/admin-panel.js" type="module"></script>
+  <!-- Widget de notificaciones -->
+  <script type="module" src="js/notification-widget.js"></script>
+<!-- 🔐 SISTEMA DE PERMISOS GLOBAL -->
+<script type="module" src="./js/permissions/init-permissions.js"></script>
+</body>
+</html>

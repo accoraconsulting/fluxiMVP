@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FLUXI | Gestión KYC</title>
+
+  <!-- 🔐 VALIDACIÓN DE SESIÓN - EJECUTA ANTES DE RENDERIZAR -->
+  <script>
+    (function() {
+      const token = localStorage.getItem('auth_token');
+      const logoutTime = localStorage.getItem('logout_timestamp');
+      if (!token || logoutTime) {
+        localStorage.clear();
+        window.location.replace('./login.html');
+      }
+    })();
+  </script>
+
+
+  <!-- Boxicons -->
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+
+  <!-- Sidebar CSS -->
+  <link rel="stylesheet" href="./css/css-dashboard/css-sidebar.css">
+  <!-- Estilos del widget -->
+  <link rel="stylesheet" href="css/notification-widget.css">
+  <!-- Notification Widget - Navbar Unificado -->
+  <link rel="stylesheet" href="./css/notification-widget-unified.css" />
+  <!-- Navbar Unificado -->
+  <link rel="stylesheet" href="./css/navbar-unified.css" />
+  <!-- KYC Management styles - REFACTORED -->
+  <link rel="stylesheet" href="./css/css-dashboard/kyc-management.css" />
+
+</head>
+
+<body>
+  <div class="app-layout">
+
+    <!-- SIDEBAR -->
+    <div id="sidebar-container"></div>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+      <!-- NAVBAR UNIFICADO -->
+      <header class="fluxi-navbar">
+        <div class="fluxi-navbar-left">
+          <h1 class="fluxi-page-title" id="navbarPageTitle">Gestión KYC</h1>
+        </div>
+        <div class="fluxi-navbar-brand">
+          <img src="/FRONTEND/assets/fluxi.png" class="fluxi-navbar-brand-logo" alt="FLUXI Logo" />
+        </div>
+        <div class="fluxi-navbar-right">
+          <div class="fluxi-notification-icon" id="navNotificationIcon">
+            <i class="bx bx-bell"></i>
+            <span class="fluxi-notification-badge" id="navNotificationBadge" style="display: none;">0</span>
+          </div>
+          <div class="fluxi-user" id="navUserButton">
+            <img src="./assets/mascota.jpeg" alt="Avatar" class="fluxi-user-avatar" id="navUserAvatar" />
+            <span class="fluxi-username" id="navUsername" data-user-name>Inspector</span>
+            <div class="fluxi-user-menu" id="navUserMenu">
+              <button class="fluxi-user-menu-item" onclick="navigateToProfile()">
+                <i class="bx bx-user"></i>
+                <span>Mi Perfil</span>
+              </button>
+              <button class="fluxi-user-menu-item" onclick="navigateToSettings()">
+                <i class="bx bx-cog"></i>
+                <span>Configuración</span>
+              </button>
+              <div class="fluxi-user-menu-divider"></div>
+              <button class="fluxi-user-menu-item" onclick="logout()" style="color: #f5576c;">
+                <i class="bx bx-log-out"></i>
+                <span>Cerrar Sesión</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- STATS CARDS -->
+      <section class="kyc-stats-grid">
+        <div class="kyc-stat-card kyc-pending">
+          <div class="kyc-stat-icon">
+            <i class="bx bx-time-five"></i>
+          </div>
+          <div class="kyc-stat-content">
+            <span class="kyc-stat-label">Pendientes</span>
+            <h3 class="kyc-stat-value" data-stat-pending>-</h3>
+          </div>
+        </div>
+
+        <div class="kyc-stat-card kyc-approved">
+          <div class="kyc-stat-icon">
+            <i class="bx bx-check-circle"></i>
+          </div>
+          <div class="kyc-stat-content">
+            <span class="kyc-stat-label">Aprobados</span>
+            <h3 class="kyc-stat-value" data-stat-approved>-</h3>
+          </div>
+        </div>
+
+        <div class="kyc-stat-card kyc-rejected">
+          <div class="kyc-stat-icon">
+            <i class="bx bx-x-circle"></i>
+          </div>
+          <div class="kyc-stat-content">
+            <span class="kyc-stat-label">Rechazados</span>
+            <h3 class="kyc-stat-value" data-stat-rejected>-</h3>
+          </div>
+        </div>
+
+        <div class="kyc-stat-card kyc-in-progress">
+          <div class="kyc-stat-icon">
+            <i class="bx bx-loader-circle"></i>
+          </div>
+          <div class="kyc-stat-content">
+            <span class="kyc-stat-label">En Proceso</span>
+            <h3 class="kyc-stat-value" data-stat-in-progress>-</h3>
+          </div>
+        </div>
+      </section>
+
+      <!-- FILTERS -->
+      <section class="kyc-filters-bar">
+        <div class="kyc-search-box">
+          <i class="bx bx-search"></i>
+          <input 
+            type="text" 
+            id="searchInput" 
+            placeholder="Buscar por email o nombre..."
+          />
+        </div>
+
+        <div class="kyc-filter-group">
+          <select id="statusFilter">
+            <option value="all">Todos los estados</option>
+            <option value="pending">Pendientes</option>
+            <option value="in_progress">En proceso</option>
+            <option value="approved">Aprobados</option>
+            <option value="rejected">Rechazados</option>
+            <option value="not_started">Sin iniciar</option>
+          </select>
+
+          <button class="kyc-btn-refresh" id="refreshBtn">
+            <i class="bx bx-refresh"></i>
+            Actualizar
+          </button>
+        </div>
+      </section>
+
+      <!-- USERS TABLE -->
+      <section class="kyc-table-container">
+        <table class="kyc-users-table">
+          <thead>
+            <tr>
+              <th>Usuario</th>
+              <th>Empresa</th>
+              <th>Documentos</th>
+              <th>Estado KYC</th>
+              <th>Paso actual</th>
+              <th>Fecha registro</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="usersTableBody">
+            <tr class="kyc-loading-row">
+              <td colspan="7" style="text-align: center; padding: 40px;">
+                <div class="kyc-loader"></div>
+                <p style="margin-top: 16px; color: #7f8c8d;">Cargando usuarios...</p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- PAGINATION -->
+        <div class="kyc-pagination" id="pagination">
+          <button class="kyc-page-btn" id="prevBtn" disabled>
+            <i class="bx bx-chevron-left"></i>
+            Anterior
+          </button>
+          <span class="kyc-page-info" id="pageInfo">Página 1 de 1</span>
+          <button class="kyc-page-btn" id="nextBtn" disabled>
+            Siguiente
+            <i class="bx bx-chevron-right"></i>
+          </button>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- MODAL DE DETALLE -->
+  <div id="userDetailModal" class="kyc-modal kyc-hidden">
+    <div class="kyc-modal-content">
+      <div class="kyc-modal-header">
+        <h3>Detalle del Usuario</h3>
+        <button class="kyc-modal-close" id="closeModal">
+          <i class="bx bx-x"></i>
+        </button>
+      </div>
+
+      <div class="kyc-modal-body" id="modalBody">
+        <!-- Contenido dinámico -->
+      </div>
+    </div>
+  </div>
+
+  <!-- JS -->
+  <script src="./js/js-dashboard/sidebar-loader.js" type="module"></script>
+  <script type="module" src="./js/js-dashboard/kyc-management.js"></script>
+  <!-- Widget de notificaciones -->
+  <script type="module" src="js/notification-widget.js"></script>
+  <!-- Navbar Unificado -->
+  <script src="./js/navbar-unified.js"></script>
+
+<!-- 🔐 SISTEMA DE PERMISOS GLOBAL -->
+<script type="module" src="./js/permissions/init-permissions.js"></script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login</title>
+  <link rel="stylesheet" href="./css/login.css" />
+</head>
+
+<body>
+
+  <div class="page-container">
+
+    <div class="auth-wrapper">
+
+      <!-- LADO IZQUIERDO -->
+     <div class="auth-left">
+
+        <!-- CONTENIDO REAL -->
+        <div class="auth-left-content">
+          <h2>Accede a tu cuenta</h2>
+
+          <p class="info-text">
+            <span class="info-icon">ⓘ</span>
+            Algunas funcionalidades pueden estar limitadas según el estado de tu cuenta.
+          </p>
+        </div>
+
+        <!-- CAPA DECORATIVA (LOGO) -->
+        <div class="auth-logo-decor">
+          <img src="./assets/fluxi.png" alt="Logo decorativo" />
+        </div>
+        
+      </div>
+
+
+      <!-- LADO DERECHO -->
+      <div class="auth-right">
+
+        <div class="login-card">
+
+          <div class="logo-container">
+            <img src="./assets/fluxi.png" alt="Payo" />
+          </div>
+
+
+          <form id="loginForm">
+
+            <div class="field">
+              <input
+                type="email"
+                id="email"
+                placeholder="Correo"
+                required
+              />
+            </div>
+
+            <div class="field">
+              <input
+                type="password"
+                id="password"
+                placeholder="Contraseña"
+                required
+              />
+            </div>
+
+            <div class="forgot">
+              <a href="#">¿Olvidaste tu contraseña?</a>
+            </div>
+
+            <button type="submit">Iniciar sesión</button>
+
+          </form>
+
+          <p class="register">
+            ¿Aún no tienes una cuenta?
+            <a href="./singup.html">Crear una cuenta</a>
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+<script type="module" src="./js/login.js"></script>
+</body>
+</html>

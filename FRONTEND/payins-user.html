@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FLUXI | Mis Links de Pago</title>
+
+  <!-- 🔐 VALIDACIÓN DE SESIÓN - EJECUTA ANTES DE RENDERIZAR -->
+  <script>
+    (function() {
+      const token = localStorage.getItem('auth_token');
+      const logoutTime = localStorage.getItem('logout_timestamp');
+      if (!token || logoutTime) {
+        localStorage.clear();
+        window.location.replace('./login.html');
+      }
+    })();
+  </script>
+
+  <!-- Boxicons -->
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+
+  <!-- Sidebar CSS -->
+  <link rel="stylesheet" href="./css/css-dashboard/css-sidebar.css" />
+
+  <!-- Notification Widget -->
+  <link rel="stylesheet" href="css/notification-widget.css">
+  <link rel="stylesheet" href="./css/notification-widget-unified.css" />
+
+  <!-- Navbar Unificado -->
+  <link rel="stylesheet" href="./css/navbar-unified.css" />
+
+  <!-- Payins CSS -->
+  <link rel="stylesheet" href="./css/payins.css" />
+</head>
+
+<body>
+  <div class="app-layout">
+
+    <!-- ═════════════════════════════════════════════════════════════ -->
+    <!-- SIDEBAR -->
+    <!-- ═════════════════════════════════════════════════════════════ -->
+    <div id="sidebar-container"></div>
+
+    <!-- ═════════════════════════════════════════════════════════════ -->
+    <!-- MAIN CONTENT -->
+    <!-- ═════════════════════════════════════════════════════════════ -->
+    <main class="main-content">
+
+      <!-- NAVBAR UNIFICADO -->
+      <header class="fluxi-navbar">
+        <div class="fluxi-navbar-left">
+          <h1 class="fluxi-page-title">Mis Links de Pago</h1>
+        </div>
+        <div class="fluxi-navbar-brand">
+          <img src="/FRONTEND/assets/fluxi.png" class="fluxi-navbar-brand-logo" alt="FLUXI Logo" />
+        </div>
+        <div class="fluxi-navbar-right">
+          <div class="fluxi-notification-icon" id="navNotificationIcon">
+            <i class="bx bx-bell"></i>
+            <span class="fluxi-notification-badge" id="navNotificationBadge" style="display: none;">0</span>
+          </div>
+          <div class="fluxi-user" id="navUserButton">
+            <img src="./assets/mascota.jpeg" alt="Avatar" class="fluxi-user-avatar" />
+            <span class="fluxi-username" id="navUsername">Usuario</span>
+            <div class="fluxi-user-menu" id="navUserMenu">
+              <button class="fluxi-user-menu-item" onclick="navigateToProfile()">
+                <i class="bx bx-user"></i>
+                <span>Mi Perfil</span>
+              </button>
+              <button class="fluxi-user-menu-item" onclick="navigateToSettings()">
+                <i class="bx bx-cog"></i>
+                <span>Configuración</span>
+              </button>
+              <div class="fluxi-user-menu-divider"></div>
+              <button class="fluxi-user-menu-item" onclick="logout()" style="color: #f5576c;">
+                <i class="bx bx-log-out"></i>
+                <span>Cerrar Sesión</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- ═════════════════════════════════════════════════════════════ -->
+      <!-- CONTENIDO PRINCIPAL -->
+      <!-- ═════════════════════════════════════════════════════════════ -->
+      <div class="payins-container">
+
+        <!-- 📊 ESTADÍSTICAS RÁPIDAS -->
+        <div class="payins-stats-row">
+          <div class="stat-card">
+            <div class="stat-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+              <i class="bx bx-link-external"></i>
+            </div>
+            <div class="stat-content">
+              <h4>Links Activos</h4>
+              <p class="stat-value" id="statsActiveLinks">0</p>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+              <i class="bx bx-check-circle"></i>
+            </div>
+            <div class="stat-content">
+              <h4>Pagados</h4>
+              <p class="stat-value" id="statsPaid">0</p>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+              <i class="bx bx-dollar-circle"></i>
+            </div>
+            <div class="stat-content">
+              <h4>Monto Recibido</h4>
+              <p class="stat-value" id="statsTotalAmount">$0</p>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+              <i class="bx bx-time-five"></i>
+            </div>
+            <div class="stat-content">
+              <h4>Pendientes</h4>
+              <p class="stat-value" id="statsPending">0</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 📋 SECCIÓN MIS LINKS -->
+        <div class="payins-card">
+          <div class="payins-card-header">
+            <div class="header-content">
+              <i class="bx bx-link-alt"></i>
+              <h2>Mis Links de Pago</h2>
+              <p>Links generados para recibir pagos de tus clientes</p>
+            </div>
+            <div class="header-actions">
+              <button type="button" class="btn btn-secondary btn-sm" id="btnRefreshLinks">
+                <i class="bx bx-refresh"></i>
+                Actualizar
+              </button>
+            </div>
+          </div>
+
+          <div class="payins-card-body">
+            <!-- Loading Spinner -->
+            <div class="loading-spinner" id="loadingLinks" style="display: none;">
+              <div class="spinner"></div>
+              <p>Cargando tus links de pago...</p>
+            </div>
+
+            <!-- Grid de Links -->
+            <div class="payins-user-grid" id="payinsUserGrid" style="display: none;">
+              <!-- Tarjetas se cargan dinámicamente -->
+            </div>
+
+            <!-- Empty State -->
+            <div class="empty-state" id="emptyLinks" style="display: none;">
+              <div class="empty-icon">
+                <i class="bx bx-inbox"></i>
+              </div>
+              <h3>No hay links de pago creados</h3>
+              <p>Cuando creen links para ti, aparecerán aquí</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ═════════════════════════════════════════════════════════════ -->
+  <!-- MODAL: VER DETALLES Y COPIAR LINK -->
+  <!-- ═════════════════════════════════════════════════════════════ -->
+  <div class="modal" id="modalPayinDetail">
+    <div class="modal-content modal-lg">
+      <div class="modal-header">
+        <h3>Detalles del Link de Pago</h3>
+        <button type="button" class="modal-close" onclick="cerrarModal('modalPayinDetail')">
+          <i class="bx bx-x"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="payin-detail-content" id="payinDetailContent">
+          <!-- Se carga dinámicamente -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═════════════════════════════════════════════════════════════ -->
+  <!-- SCRIPTS -->
+  <!-- ═════════════════════════════════════════════════════════════ -->
+
+  <!-- Sidebar Loader - CRÍTICO para mostrar sidebar -->
+  <script src="./js/js-dashboard/sidebar-loader.js"></script>
+
+  <!-- 🔌 Real-time Service - Actualizaciones en tiempo real -->
+  <script type="module" src="./js/services/payin-realtime.service.js"></script>
+
+  <!-- Notification Widget -->
+  <script type="module" src="./js/notification-widget.js"></script>
+
+  <!-- Permisos y Guard de rutas -->
+  <script type="module">
+    import { guardRoute } from './js/permissions/route-guard.js';
+    import { initializePermissions } from './js/permissions/navbar-updater.js';
+
+    // Proteger esta ruta para usuarios autenticados
+    guardRoute('payinsUser');
+    initializePermissions();
+  </script>
+
+  <!-- Lógica de Payins User -->
+  <script src="./js/handlers/payin-user.js"></script>
+  <script src="./js/services/payin.service.js"></script>
+
+  <!-- Navbar Unificado -->
+  <script src="./js/navbar-unified.js"></script>
+
+  <!-- 🔐 SISTEMA DE PERMISOS GLOBAL -->
+  <script type="module" src="./js/permissions/init-permissions.js"></script>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Registro payO</title>
+
+  <!-- 🔐 VALIDACIÓN DE SESIÓN - EJECUTA ANTES DE RENDERIZAR -->
+  <script>
+    (function() {
+      const token = localStorage.getItem('auth_token');
+      const logoutTime = localStorage.getItem('logout_timestamp');
+      if (!token || logoutTime) {
+        localStorage.clear();
+        window.location.replace('./login.html');
+      }
+    })();
+  </script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./css/kyc.css">
+  <link rel="stylesheet" href="./css/kyc-documents.css">
+  <link rel="stylesheet" href="./css/kyc-verified.css">
+  
+</head>
+
+<body>
+
+  <div class="kyc-page">
+    
+<div class="kyc-card-wrap">
+   <div class="kyc-card">
+
+  <!-- TOP BAR -->
+  <div class="kyc-topbar">
+      <!-- LEFT: BRAND -->
+    <div class="kyc-brand-box">
+
+      <div class="kyc-brand-title">
+        <span class="kyc-title">Registro</span>
+      </div>
+
+      <div class="kyc-brand-logo">
+        <img src="./assets/fluxi2.png" alt="payO" />
+      </div>
+
+    </div>
+
+    <!-- RIGHT: PROGRESS -->
+    <div class="kyc-progress">
+      <div class="progress-step active">
+        <span class="step-dot"></span>
+        <span>Representante legal</span>
+      </div>
+      <div class="progress-step">
+        <span class="step-dot"></span>
+        <span>Datos de la empresa</span>
+      </div>
+      <div class="progress-step">
+        <span class="step-dot"></span>
+        <span>Documentos</span>
+      </div>
+      <div class="progress-step">
+        <span class="step-dot"></span>
+        <span>verificación de identidad</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FORM CONTENT -->
+  <div class="kyc-content">
+    <div id="step-container"></div>
+  </div>
+
+  <!-- ACTIONS -->
+  <div class="kyc-actions">
+    <button id="dashBtn" class="kyc-btn secondary1">Dashboard</button>
+    <button id="prevBtn" class="kyc-btn secondary">Atrás</button>
+    <button id="nextBtn" class="kyc-btn">Continuar →</button>
+    
+  </div>
+
+
+
+</div>
+</div>
+
+  <script type="module" src="/FRONTEND/js/main.js"></script>
+</body>
+</html>

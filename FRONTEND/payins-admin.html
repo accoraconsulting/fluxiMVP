@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FLUXI | Generar Links de Pago</title>
+
+  <!-- 🔐 VALIDACIÓN DE SESIÓN - EJECUTA ANTES DE RENDERIZAR -->
+  <script>
+    (function() {
+      const token = localStorage.getItem('auth_token');
+      const logoutTime = localStorage.getItem('logout_timestamp');
+      if (!token || logoutTime) {
+        localStorage.clear();
+        window.location.replace('./login.html');
+      }
+    })();
+  </script>
+
+  <!-- Boxicons -->
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+
+  <!-- Sidebar CSS -->
+  <link rel="stylesheet" href="./css/css-dashboard/css-sidebar.css" />
+
+  <!-- Notification Widget -->
+  <link rel="stylesheet" href="css/notification-widget.css">
+  <link rel="stylesheet" href="./css/notification-widget-unified.css" />
+
+  <!-- Navbar Unificado -->
+  <link rel="stylesheet" href="./css/navbar-unified.css" />
+
+  <!-- Payins CSS -->
+  <link rel="stylesheet" href="./css/payins.css" />
+</head>
+
+<body>
+  <div class="app-layout">
+
+    <!-- ═════════════════════════════════════════════════════════════ -->
+    <!-- SIDEBAR -->
+    <!-- ═════════════════════════════════════════════════════════════ -->
+    <div id="sidebar-container"></div>
+
+    <!-- ═════════════════════════════════════════════════════════════ -->
+    <!-- MAIN CONTENT -->
+    <!-- ═════════════════════════════════════════════════════════════ -->
+    <main class="main-content">
+
+      <!-- NAVBAR UNIFICADO -->
+      <header class="fluxi-navbar">
+        <div class="fluxi-navbar-left">
+          <h1 class="fluxi-page-title">Generar Links de Pago</h1>
+        </div>
+        <div class="fluxi-navbar-brand">
+          <img src="/FRONTEND/assets/fluxi.png" class="fluxi-navbar-brand-logo" alt="FLUXI Logo" />
+        </div>
+        <div class="fluxi-navbar-right">
+          <div class="fluxi-notification-icon" id="navNotificationIcon">
+            <i class="bx bx-bell"></i>
+            <span class="fluxi-notification-badge" id="navNotificationBadge" style="display: none;">0</span>
+          </div>
+          <div class="fluxi-user" id="navUserButton">
+            <img src="./assets/mascota.jpeg" alt="Avatar" class="fluxi-user-avatar" />
+            <span class="fluxi-username" id="navUsername">Usuario</span>
+            <div class="fluxi-user-menu" id="navUserMenu">
+              <button class="fluxi-user-menu-item" onclick="navigateToProfile()">
+                <i class="bx bx-user"></i>
+                <span>Mi Perfil</span>
+              </button>
+              <button class="fluxi-user-menu-item" onclick="navigateToSettings()">
+                <i class="bx bx-cog"></i>
+                <span>Configuración</span>
+              </button>
+              <div class="fluxi-user-menu-divider"></div>
+              <button class="fluxi-user-menu-item" onclick="logout()" style="color: #f5576c;">
+                <i class="bx bx-log-out"></i>
+                <span>Cerrar Sesión</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- ═════════════════════════════════════════════════════════════ -->
+      <!-- CONTENIDO PRINCIPAL -->
+      <!-- ═════════════════════════════════════════════════════════════ -->
+      <div class="payins-container">
+
+        <!-- 📊 ESTADÍSTICAS RÁPIDAS -->
+        <div class="payins-stats-row">
+          <div class="stat-card">
+            <div class="stat-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+              <i class="bx bx-link-external"></i>
+            </div>
+            <div class="stat-content">
+              <h4>Links Activos</h4>
+              <p class="stat-value" id="statsActiveLinks">0</p>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+              <i class="bx bx-check-circle"></i>
+            </div>
+            <div class="stat-content">
+              <h4>Completados Hoy</h4>
+              <p class="stat-value" id="statsCompletedToday">0</p>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+              <i class="bx bx-dollar-circle"></i>
+            </div>
+            <div class="stat-content">
+              <h4>Monto Recibido</h4>
+              <p class="stat-value" id="statsTotalAmount">$0</p>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+              <i class="bx bx-hourglass"></i>
+            </div>
+            <div class="stat-content">
+              <h4>Pendientes</h4>
+              <p class="stat-value" id="statsPending">0</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 🎯 SECCIÓN CREAR PAYIN -->
+        <div class="payins-card">
+          <div class="payins-card-header">
+            <div class="header-content">
+              <i class="bx bx-plus-circle"></i>
+              <h2>Crear Nuevo Link de Pago</h2>
+              <p>Genera un link para que tus clientes paguen de forma segura</p>
+            </div>
+          </div>
+
+          <div class="payins-card-body">
+            <form id="formCrearPayin" class="payins-form">
+
+              <!-- 👤 PASO 1: SELECCIONAR USUARIO -->
+              <div class="form-step">
+                <h3 class="step-title">
+                  <span class="step-badge">1</span>
+                  Selecciona quién recibe el dinero
+                </h3>
+
+                <div class="form-group">
+                  <label for="inputUserSearch">Buscar Usuario</label>
+                  <div class="input-group-search">
+                    <i class="bx bx-search"></i>
+                    <input
+                      type="text"
+                      id="inputUserSearch"
+                      placeholder="Busca por nombre, email o documento..."
+                      class="form-control"
+                    />
+                  </div>
+                  <div class="users-list" id="usuariosList"></div>
+                  <input type="hidden" id="inputSelectedUserId" />
+                  <div class="user-selected" id="userSelected" style="display: none;">
+                    <div class="user-selected-content">
+                      <i class="bx bx-check-circle"></i>
+                      <span id="userSelectedName"></span>
+                    </div>
+                    <button type="button" class="btn-clear-user" onclick="limpiarUsuarioSeleccionado()">
+                      <i class="bx bx-x"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 💰 PASO 2: DATOS DEL PAYIN -->
+              <div class="form-step">
+                <h3 class="step-title">
+                  <span class="step-badge">2</span>
+                  Datos del Link de Pago
+                </h3>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="inputMonto">Monto *</label>
+                    <div class="input-group-amount">
+                      <i class="bx bx-dollar"></i>
+                      <input
+                        type="number"
+                        id="inputMonto"
+                        placeholder="0.00"
+                        class="form-control"
+                        step="0.01"
+                        min="0"
+                      />
+                    </div>
+                    <small id="montoError" class="form-error"></small>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="selectMoneda">Moneda *</label>
+                    <select id="selectMoneda" class="form-control">
+                      <option value="">Selecciona moneda...</option>
+                      <option value="USD">USD - Dólar Americano</option>
+                      <option value="COP">COP - Peso Colombiano</option>
+                      <option value="EUR">EUR - Euro</option>
+                    </select>
+                    <small id="monedaError" class="form-error"></small>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 🌍 PASO 3: PAÍS Y MÉTODO DE PAGO -->
+              <div class="form-step">
+                <h3 class="step-title">
+                  <span class="step-badge">3</span>
+                  País y Método de Pago
+                </h3>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="selectPais">País *</label>
+                    <select id="selectPais" class="form-control" onchange="cargarMetodosDePago()">
+                      <option value="">Selecciona país...</option>
+                      <option value="CO">🇨🇴 Colombia</option>
+                      <option value="AR">🇦🇷 Argentina</option>
+                      <option value="CL">🇨🇱 Chile</option>
+                      <option value="BR">🇧🇷 Brasil</option>
+                      <option value="MX">🇲🇽 México</option>
+                    </select>
+                    <small id="paisError" class="form-error"></small>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="selectMetodo">Método de Pago *</label>
+                    <select id="selectMetodo" class="form-control">
+                      <option value="">Selecciona método...</option>
+                    </select>
+                    <small id="metodoError" class="form-error"></small>
+                  </div>
+                </div>
+
+                <!-- 📌 Descripción de método seleccionado -->
+                <div class="method-description" id="methodDescription" style="display: none;">
+                  <div class="alert-info">
+                    <i class="bx bx-info-circle"></i>
+                    <p id="methodDescriptionText"></p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 📝 PASO 4: DESCRIPCIÓN (OPCIONAL) -->
+              <div class="form-step">
+                <h3 class="step-title">
+                  <span class="step-badge">4</span>
+                  Descripción (Opcional)
+                </h3>
+
+                <div class="form-group">
+                  <label for="inputDescripcion">Descripción del Pago</label>
+                  <textarea
+                    id="inputDescripcion"
+                    class="form-control"
+                    placeholder="Ej: Pago por servicio de consultoría..."
+                    rows="3"
+                  ></textarea>
+                  <small class="form-hint">Esta descripción será visible para quien pague</small>
+                </div>
+              </div>
+
+              <!-- BOTONES DE ACCIÓN -->
+              <div class="form-actions">
+                <button type="reset" class="btn btn-secondary">
+                  <i class="bx bx-refresh"></i>
+                  Limpiar Formulario
+                </button>
+                <button type="submit" class="btn btn-primary" id="btnCrearPayin">
+                  <i class="bx bx-check"></i>
+                  Crear Link de Pago
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- 📋 SECCIÓN HISTORIAL DE PAYINS -->
+        <div class="payins-card">
+          <div class="payins-card-header">
+            <div class="header-content">
+              <i class="bx bx-list-ul"></i>
+              <h2>Historial de Links</h2>
+              <p>Todos los links creados y su estado actual</p>
+            </div>
+            <div class="header-actions">
+              <input
+                type="text"
+                id="searchPayins"
+                class="search-input"
+                placeholder="Buscar por usuario o monto..."
+              />
+            </div>
+          </div>
+
+          <div class="payins-card-body">
+            <!-- Loading Spinner -->
+            <div class="loading-spinner" id="loadingPayins" style="display: none;">
+              <div class="spinner"></div>
+              <p>Cargando links de pago...</p>
+            </div>
+
+            <!-- Tabla de Payins -->
+            <div class="payins-table-container" id="payinsTableContainer" style="display: none;">
+              <table class="payins-table">
+                <thead>
+                  <tr>
+                    <th>Usuario</th>
+                    <th>Monto</th>
+                    <th>País</th>
+                    <th>Método</th>
+                    <th>Estado</th>
+                    <th>Creado</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="payinsTableBody">
+                  <!-- Filas se cargan dinámicamente -->
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Empty State -->
+            <div class="empty-state" id="emptyPayins" style="display: none;">
+              <div class="empty-icon">
+                <i class="bx bx-inbox"></i>
+              </div>
+              <h3>No hay links de pago creados</h3>
+              <p>Los links que crees aparecerán aquí</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ═════════════════════════════════════════════════════════════ -->
+  <!-- MODAL: CONFIRMAR CREAR PAYIN -->
+  <!-- ═════════════════════════════════════════════════════════════ -->
+  <div class="modal" id="modalConfirmarPayin">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Confirmar Creación de Link</h3>
+        <button type="button" class="modal-close" onclick="cerrarModal('modalConfirmarPayin')">
+          <i class="bx bx-x"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="confirmation-details">
+          <p><strong>Usuario:</strong> <span id="confirmUserName"></span></p>
+          <p><strong>Monto:</strong> <span id="confirmMonto"></span></p>
+          <p><strong>Moneda:</strong> <span id="confirmMoneda"></span></p>
+          <p><strong>País:</strong> <span id="confirmPais"></span></p>
+          <p><strong>Método:</strong> <span id="confirmMetodo"></span></p>
+          <p class="confirmation-warning">
+            <i class="bx bx-info-circle"></i>
+            Al confirmar, se generará un link de pago que el usuario podrá usar para completar la transacción.
+          </p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="cerrarModal('modalConfirmarPayin')">
+          Cancelar
+        </button>
+        <button type="button" class="btn btn-primary" id="btnConfirmarCrear">
+          <i class="bx bx-check"></i>
+          Confirmar y Crear
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═════════════════════════════════════════════════════════════ -->
+  <!-- MODAL: VER DETALLES DE PAYIN -->
+  <!-- ═════════════════════════════════════════════════════════════ -->
+  <div class="modal" id="modalPayinDetail">
+    <div class="modal-content modal-lg">
+      <div class="modal-header">
+        <h3>Detalles del Link de Pago</h3>
+        <button type="button" class="modal-close" onclick="cerrarModal('modalPayinDetail')">
+          <i class="bx bx-x"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="payin-detail-content" id="payinDetailContent">
+          <!-- Se carga dinámicamente -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═════════════════════════════════════════════════════════════ -->
+  <!-- SCRIPTS -->
+  <!-- ═════════════════════════════════════════════════════════════ -->
+
+  <!-- Navbar Unificado -->
+  <script src="./js/navbar-unified.js"></script>
+
+  <!-- Notification Widget -->
+  <script type="module" src="./js/notification-widget.js"></script>
+
+  <!-- Permisos y Guard de rutas -->
+  <script type="module">
+    import { guardRoute } from './js/permissions/route-guard.js';
+    import { initializePermissions } from './js/permissions/navbar-updater.js';
+
+    // Proteger esta ruta para admins
+    guardRoute('payins');
+    initializePermissions();
+  </script>
+
+  <!-- Sidebar Loader - CRÍTICO para mostrar sidebar -->
+  <script src="./js/js-dashboard/sidebar-loader.js"></script>
+
+  <!-- Lógica de Payins Admin -->
+  <script src="./js/handlers/payin-admin.js"></script>
+  <script src="./js/services/payin.service.js"></script>
+
+  <!-- 🔐 SISTEMA DE PERMISOS GLOBAL -->
+  <script type="module" src="./js/permissions/init-permissions.js"></script>
+</body>
+</html>

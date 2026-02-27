@@ -1,0 +1,180 @@
+/* ===============================
+   DEPOSIT VIEW
+   =============================== */
+
+/* PAGE HEADER */
+.page-header {
+  padding: 24px 32px 12px;
+}
+
+.page-title {
+  font-size: 26px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.page-subtitle {
+  font-size: 14px;
+  color: #6b7280;
+  margin-top: 4px;
+}
+
+/* LAYOUT */
+.deposit-layout {
+  margin: 0 32px 32px;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+}
+
+/* MAIN CARD */
+.deposit-card {
+  background: #fff;
+  border-radius: 18px;
+  padding: 28px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+}
+
+.deposit-card h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  color: #111827;
+}
+
+/* FORM */
+.form-group {
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.form-group select {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  font-size: 14px;
+}
+
+/* ADDRESS */
+.address-box {
+  margin-top: 24px;
+  background: #f9fafb;
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.address-label {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.address-value {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.address-value code {
+  flex: 1;
+  background: #fff;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 13px;
+  overflow-x: auto;
+}
+
+.copy-btn {
+  border: none;
+  background: var(--primary);
+  color: #fff;
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.address-box small {
+  font-size: 12px;
+  color: #6b7280;
+  margin-top: 8px;
+  display: block;
+}
+
+/* WARNING */
+.network-warning {
+  margin-top: 16px;
+  padding: 14px;
+  border-radius: 12px;
+  background: #fff7ed;
+  color: #9a3412;
+  font-size: 13px;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+/* SIDE */
+.deposit-side {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.qr-card,
+.info-card {
+  background: #fff;
+  border-radius: 18px;
+  padding: 24px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+}
+
+.qr-card h4,
+.info-card h4 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.qr-box {
+  display: flex;
+  justify-content: center;
+  padding: 16px;
+  background: #f9fafb;
+  border-radius: 14px;
+}
+
+.qr-box img {
+  width: 160px;
+  height: 160px;
+}
+
+.qr-hint {
+  margin-top: 12px;
+  font-size: 13px;
+  color: #6b7280;
+  text-align: center;
+}
+
+/* INFO LIST */
+.info-card ul {
+  list-style: none;
+  font-size: 14px;
+  color: #374151;
+}
+
+.info-card li {
+  padding: 8px 0;
+  border-bottom: 1px solid #eef0f4;
+}
+
+.info-card li:last-child {
+  border-bottom: none;
+}

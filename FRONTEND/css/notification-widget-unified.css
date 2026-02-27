@@ -1,0 +1,308 @@
+/**
+ * NOTIFICATION WIDGET - Compatibilidad con Navbar Unificado
+ * Estilos adicionales para que el dropdown funcione bien con el nuevo navbar
+ */
+
+/* ===================================
+   POSICIONAMIENTO EN NAVBAR UNIFICADO
+=================================== */
+
+/* El bell icon en navbar unificado ya existe, le damos estilos del widget */
+.fluxi-notification-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Asegurar que el dropdown se posicione correctamente */
+.fluxi-navbar-right .notification-widget {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  margin: 0;
+}
+
+.fluxi-navbar-right .notification-dropdown {
+  position: fixed;
+  width: 380px;
+  max-height: 500px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 2147483647; /* Máximo z-index posible */
+  display: flex;
+  flex-direction: column;
+  top: auto;
+  right: auto;
+  bottom: auto;
+  left: auto;
+  pointer-events: none; /* No bloquea clicks cuando está hidden */
+}
+
+.fluxi-navbar-right .notification-dropdown.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  pointer-events: auto; /* Permite clicks cuando está visible */
+}
+
+/* ===================================
+   ESTILOS DEL CONTENIDO DROPDOWN
+=================================== */
+
+.notification-dropdown .notification-header {
+  padding: 16px;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.notification-dropdown .notification-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.notification-dropdown .mark-all-read {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #667eea;
+  font-size: 18px;
+  transition: color 0.2s;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.notification-dropdown .mark-all-read:hover {
+  color: #764ba2;
+  background: rgba(102, 126, 234, 0.1);
+}
+
+.notification-dropdown .notification-list {
+  flex: 1;
+  overflow-y: auto;
+  max-height: 380px;
+  padding: 8px 0;
+}
+
+.notification-dropdown .notification-item {
+  display: flex;
+  gap: 12px;
+  padding: 12px 12px;
+  border-bottom: 1px solid #f1f5f9;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-radius: 8px;
+  margin: 0 8px;
+}
+
+.notification-dropdown .notification-item:hover {
+  background: #f8f9ff;
+  padding-left: 16px;
+}
+
+.notification-dropdown .notification-item.unread {
+  background: #f0f4ff;
+}
+
+.notification-dropdown .notification-item.unread:hover {
+  background: #e8eeff;
+}
+
+.notification-dropdown .notification-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 20px;
+}
+
+.notification-dropdown .notification-icon.kyc {
+  background: #dbeafe;
+  color: #0284c7;
+}
+
+.notification-dropdown .notification-icon.wallet {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.notification-dropdown .notification-icon.security {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.notification-dropdown .notification-icon.system {
+  background: #f3e8ff;
+  color: #7c3aed;
+}
+
+.notification-dropdown .notification-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.notification-dropdown .notification-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.notification-dropdown .notification-message {
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.notification-dropdown .notification-time {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.notification-dropdown .notification-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #667eea;
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+
+.notification-dropdown .notification-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 40px 20px;
+  color: #94a3b8;
+}
+
+.notification-dropdown .notification-empty i {
+  font-size: 48px;
+  opacity: 0.5;
+}
+
+.notification-dropdown .notification-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 40px 20px;
+  color: #94a3b8;
+}
+
+.notification-dropdown .notification-loading i {
+  font-size: 24px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.notification-dropdown .notification-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 40px 20px;
+  color: #dc2626;
+}
+
+.notification-dropdown .notification-error i {
+  font-size: 40px;
+}
+
+/* ===================================
+   FOOTER
+=================================== */
+
+.notification-dropdown .notification-footer {
+  padding: 12px 16px;
+  border-top: 1px solid #e2e8f0;
+  background: #f8fafc;
+  border-radius: 0 0 12px 12px;
+}
+
+.notification-dropdown .notification-footer-link,
+.notification-dropdown .notification-footer a {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: #667eea;
+  text-decoration: none;
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.notification-dropdown .notification-footer-link:hover,
+.notification-dropdown .notification-footer a:hover {
+  background: rgba(102, 126, 234, 0.1);
+  color: #764ba2;
+}
+
+/* ===================================
+   SCROLLBAR PERSONALIZADO
+=================================== */
+
+.notification-dropdown .notification-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.notification-dropdown .notification-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.notification-dropdown .notification-list::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.notification-dropdown .notification-list::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* ===================================
+   RESPONSIVE
+=================================== */
+
+@media (max-width: 768px) {
+  .notification-dropdown {
+    width: 320px;
+  }
+
+  .notification-dropdown .notification-list {
+    max-height: 300px;
+  }
+
+  .notification-item {
+    padding: 10px 10px;
+  }
+}

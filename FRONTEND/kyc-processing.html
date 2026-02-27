@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Payoh | Verificando identidad</title>
+
+  <!-- 🔐 VALIDACIÓN DE SESIÓN - EJECUTA ANTES DE RENDERIZAR -->
+  <script>
+    (function() {
+      const token = localStorage.getItem('auth_token');
+      const logoutTime = localStorage.getItem('logout_timestamp');
+      if (!token || logoutTime) {
+        localStorage.clear();
+        window.location.replace('./login.html');
+      }
+    })();
+  </script>
+
+  <link rel="stylesheet" href="./css/kyc-processing.css" />
+</head>
+<body class="processing-screen">
+
+  <div class="processing-container">
+    <img src="./assets/fluxi.png" class="logo" />
+    <h2>Estamos verificando tu información</h2>
+    <p>Esto puede tardar unos segundos...</p>
+    <div class="loader"></div>
+  </div>
+
+  <script type="module" src="./js/kyc/processing.js"></script>
+<!-- 🔐 SISTEMA DE PERMISOS GLOBAL -->
+<script type="module" src="./js/permissions/init-permissions.js"></script>
+</body>
+</html>
