@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // ✅ 8. Redirigir al dashboard
     console.log("✅ Login exitoso, redirigiendo...");
-    window.location.replace("/FRONTEND/dashboard.html");
+    window.location.replace("/dashboard.html");
 
   } catch (err) {
     console.error("❌ LOGIN ERROR:", err.message);
@@ -43,10 +43,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     const container = document.querySelector(".loading-container");
     if (container) {
       container.innerHTML = `
-        <img src="/FRONTEND/assets/fluxi2.png" class="logo" alt="Payoh" />
+        <img src="/assets/fluxi2.png" class="logo" alt="Payoh" />
         <h2 style="color: #e74c3c;">Error al iniciar sesión</h2>
         <p class="error-message">${getErrorMessage(err.message)}</p>
-        <button class="retry-button" onclick="window.location.replace('/FRONTEND/login.html')">
+        <button class="retry-button" onclick="window.location.replace('/login.html')">
           Volver a intentar
         </button>
       `;
