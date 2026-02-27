@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   try {
     // 1️⃣ Cargar HTML del sidebar
-    const res = await fetch("/FRONTEND/partials/sidebar.html");
+    const res = await fetch("/partials/sidebar.html");
     const html = await res.text();
     container.innerHTML = html;
 

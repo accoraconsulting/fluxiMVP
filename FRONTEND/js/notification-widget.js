@@ -319,10 +319,6 @@ class NotificationWidget {
             url = path + '.html?' + query;
           }
 
-          // Agregar /FRONTEND/ al inicio si no está
-          if (!url.includes('/FRONTEND/')) {
-            url = '/FRONTEND' + url;
-          }
         }
 
         console.log('[NotificationWidget] 🔗 Redirigiendo a:', url);
