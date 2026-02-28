@@ -175,3 +175,127 @@ body {
   margin: 1rem 0;
   transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+/* ===== MOBILE RESPONSIVE (≤768px) ===== */
+@media (max-width: 768px) {
+  .app-layout {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: auto;
+    max-height: 0;
+    overflow: hidden;
+    transform: translateY(-100%);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    flex-direction: row;
+    justify-content: flex-start;
+    z-index: 999;
+  }
+
+  .sidebar.mobile-open {
+    max-height: 100vh;
+    transform: translateY(0);
+    flex-direction: column;
+    height: 100vh;
+    bottom: 0;
+  }
+
+  .sidebar.collapsed {
+    width: 100%;
+  }
+
+  .main-content {
+    margin-left: 0;
+    margin-top: 0;
+  }
+
+  .sidebar-menu {
+    width: 100%;
+    padding: 0;
+  }
+
+  .menu-item {
+    width: 100%;
+    border-radius: 0;
+    margin-bottom: 0;
+    padding: 16px 20px;
+    height: auto;
+    min-height: 48px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .sidebar-footer {
+    width: 100%;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-left: none;
+    padding: 0;
+  }
+
+  .sidebar-footer .menu-item {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .sidebar-footer .menu-item:last-child {
+    border-bottom: none;
+  }
+
+  .sidebar.mobile-open .sidebar-header {
+    padding: 16px 20px;
+    justify-content: space-between;
+  }
+
+  .toggle-btn {
+    order: 2;
+  }
+
+  .sidebar-brand {
+    order: 1;
+    flex: 1;
+  }
+
+  /* Overlay oscuro detrás del sidebar en móvil */
+  .sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 998;
+  }
+
+  .sidebar-overlay.mobile-open {
+    display: block;
+  }
+}
+
+@media (max-width: 480px) {
+  .sidebar-header {
+    padding: 12px 16px;
+  }
+
+  .sidebar-brand {
+    font-size: 16px;
+  }
+
+  .menu-item {
+    padding: 14px 16px;
+    font-size: 14px;
+  }
+
+  .icon {
+    font-size: 18px;
+    min-width: 20px;
+  }
+
+  .label {
+    font-size: 13px;
+  }
+}

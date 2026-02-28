@@ -44,33 +44,66 @@ export function initSidebar() {
   toggleBtn.replaceWith(toggleBtn.cloneNode(true));
   const freshToggleBtn = document.getElementById("toggleSidebar");
 
+  // 📱 Detectar si es móvil
+  const isMobile = () => window.innerWidth <= 768;
+
   // 🎯 listener limpio
   freshToggleBtn.addEventListener("click", () => {
-    sidebar.classList.toggle("collapsed");
-
-    const isCollapsed = sidebar.classList.contains("collapsed");
-    localStorage.setItem("sidebar-collapsed", isCollapsed);
-
-    // 📐 Actualizar margin del main-content
-    updateMainContentMargin(isCollapsed);
-
-    console.log(
-      "[Sidebar] Toggle OK:",
-      isCollapsed ? "collapsed" : "expanded"
-    );
+    if (isMobile()) {
+      // En móvil: toggle mobile-open
+      sidebar.classList.toggle("mobile-open");
+      const sidebarOverlay = document.getElementById("sidebarOverlay");
+      if (sidebarOverlay) {
+        sidebarOverlay.classList.toggle("mobile-open");
+      }
+      console.log("[Sidebar] Mobile toggle OK");
+    } else {
+      // En desktop: toggle collapsed
+      sidebar.classList.toggle("collapsed");
+      const isCollapsed = sidebar.classList.contains("collapsed");
+      localStorage.setItem("sidebar-collapsed", isCollapsed);
+      updateMainContentMargin(isCollapsed);
+      console.log("[Sidebar] Toggle OK:", isCollapsed ? "collapsed" : "expanded");
+    }
   });
 
-  // 🔁 restaurar estado
+  // 🔁 restaurar estado (solo en desktop)
   const saved = localStorage.getItem("sidebar-collapsed");
   const isCollapsedAtStart = saved === "true";
-  if (isCollapsedAtStart) {
+  if (!isMobile() && isCollapsedAtStart) {
     sidebar.classList.add("collapsed");
-  } else {
+    updateMainContentMargin(true);
+  } else if (!isMobile()) {
     sidebar.classList.remove("collapsed");
+    updateMainContentMargin(false);
   }
 
-  // 📐 Aplicar margin inicial
-  updateMainContentMargin(isCollapsedAtStart);
+  // 📐 Aplicar margin inicial (desktop only)
+  if (!isMobile()) {
+    updateMainContentMargin(isCollapsedAtStart);
+  }
+
+  // 📱 Cerrar sidebar en móvil cuando se clickea un link
+  if (isMobile()) {
+    document.querySelectorAll(".menu-item").forEach(link => {
+      link.addEventListener("click", () => {
+        sidebar.classList.remove("mobile-open");
+        const sidebarOverlay = document.getElementById("sidebarOverlay");
+        if (sidebarOverlay) {
+          sidebarOverlay.classList.remove("mobile-open");
+        }
+      });
+    });
+
+    // Cerrar al clickear overlay
+    const sidebarOverlay = document.getElementById("sidebarOverlay");
+    if (sidebarOverlay) {
+      sidebarOverlay.addEventListener("click", () => {
+        sidebar.classList.remove("mobile-open");
+        sidebarOverlay.classList.remove("mobile-open");
+      });
+    }
+  }
 
   // 📍 item activo
   const currentPath = window.location.pathname;
