@@ -197,3 +197,88 @@ button:hover {
   color: #2563eb;
   text-decoration: none;
 }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .page-container {
+    padding: 20px;
+    min-height: auto;
+    padding-top: 60px;
+    padding-bottom: 60px;
+  }
+
+  .auth-wrapper {
+    grid-template-columns: 1fr;
+    min-height: auto;
+    max-width: 100%;
+  }
+
+  .auth-left {
+    display: none;
+  }
+
+  .auth-right {
+    padding: 30px 20px;
+  }
+
+  .login-card {
+    width: 100%;
+    max-width: 100%;
+    padding: 50px 24px 24px;
+  }
+
+  .auth-left-content h2 {
+    font-size: 24px;
+  }
+
+  .logo-container {
+    width: 80%;
+    height: 50px;
+  }
+
+  .logo img {
+    height: 60px;
+  }
+
+  .field input {
+    padding: 12px 12px;
+    font-size: 14px;
+  }
+
+  button {
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  .register {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-container {
+    padding: 16px;
+    padding-top: 40px;
+    padding-bottom: 40px;
+  }
+
+  .auth-right {
+    padding: 20px 16px;
+  }
+
+  .login-card {
+    padding: 40px 16px 16px;
+  }
+
+  .field {
+    margin-bottom: 14px;
+  }
+
+  .forgot {
+    margin-bottom: 16px;
+  }
+
+  .register {
+    margin-top: 16px;
+  }
+}

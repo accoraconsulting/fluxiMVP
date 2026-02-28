@@ -324,3 +324,125 @@ button:hover {
 .modal-btn.error:hover {
   box-shadow: 0 8px 20px rgba(245, 87, 108, 0.4);
 }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .page-container {
+    padding: 20px;
+    min-height: auto;
+    padding-top: 60px;
+    padding-bottom: 60px;
+  }
+
+  .auth-wrapper {
+    grid-template-columns: 1fr;
+    min-height: auto;
+    max-width: 100%;
+  }
+
+  .auth-left {
+    display: none;
+  }
+
+  .auth-right {
+    padding: 30px 20px;
+  }
+
+  .login-card {
+    width: 100%;
+    max-width: 100%;
+    padding: 50px 24px 24px;
+  }
+
+  .auth-left-content h2 {
+    font-size: 24px;
+  }
+
+  .logo-container {
+    width: 80%;
+    height: 50px;
+  }
+
+  .logo img {
+    height: 60px;
+  }
+
+  .field input {
+    padding: 12px 12px;
+    font-size: 14px;
+  }
+
+  button {
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  .register {
+    font-size: 12px;
+  }
+
+  .modal-content {
+    width: 90%;
+    max-width: 100%;
+    padding: 32px 24px;
+  }
+
+  .modal-icon {
+    width: 60px;
+    height: 60px;
+  }
+
+  .modal-title {
+    font-size: 22px;
+  }
+
+  .modal-message {
+    font-size: 14px;
+  }
+
+  .modal-btn {
+    padding: 12px 24px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-container {
+    padding: 16px;
+    padding-top: 40px;
+    padding-bottom: 40px;
+  }
+
+  .auth-right {
+    padding: 20px 16px;
+  }
+
+  .login-card {
+    padding: 40px 16px 16px;
+  }
+
+  .field {
+    margin-bottom: 14px;
+  }
+
+  .forgot {
+    margin-bottom: 16px;
+  }
+
+  .register {
+    margin-top: 16px;
+  }
+
+  .modal-content {
+    padding: 24px 16px;
+  }
+
+  .modal-icon {
+    width: 50px;
+    height: 50px;
+  }
+
+  .modal-title {
+    font-size: 18px;
+  }
+}
