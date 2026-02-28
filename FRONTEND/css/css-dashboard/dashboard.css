@@ -604,12 +604,95 @@ body.sidebar-collapsed .main-content {
 }
 
 /* Responsive */
+@media (max-width: 1024px) {
+  .balances {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .page-header {
+    padding: 20px 24px 8px 24px;
+  }
+
+  .page-title {
+    font-size: 22px;
+  }
+}
+
 @media (max-width: 768px) {
+  .balances {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding: 0 16px;
+  }
+
+  .balance-card {
+    padding: 16px;
+  }
+
+  .balance-card p {
+    font-size: 12px;
+  }
+
+  .balance-card h2 {
+    font-size: 20px;
+  }
+
+  .balance-card span {
+    font-size: 12px;
+  }
+
+  .page-header {
+    padding: 16px 16px 8px 16px;
+  }
+
+  .page-title {
+    font-size: 20px;
+  }
+
+  .topbar {
+    padding: 0 16px;
+    height: 64px;
+  }
+
   .conversion-summary {
     grid-template-columns: 1fr;
+    padding: 16px;
   }
 
   .conversion-arrow {
     transform: rotate(90deg);
+  }
+
+  .converter {
+    padding: 16px;
+  }
+
+  .movements {
+    padding: 0 16px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .balances {
+    padding: 0 12px;
+  }
+
+  .balance-card {
+    padding: 12px;
+  }
+
+  .balance-card h2 {
+    font-size: 18px;
+  }
+
+  .page-title {
+    font-size: 18px;
+  }
+
+  .topbar {
+    padding: 0 12px;
   }
 }

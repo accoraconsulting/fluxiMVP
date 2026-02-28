@@ -178,3 +178,147 @@
 .info-card li:last-child {
   border-bottom: none;
 }
+
+/* ===== RESPONSIVE MOBILE ===== */
+@media (max-width: 1024px) {
+  .deposit-layout {
+    grid-template-columns: 1fr;
+    margin: 0 24px 24px;
+  }
+
+  .page-header {
+    padding: 20px 24px 12px;
+  }
+
+  .page-title {
+    font-size: 22px;
+  }
+
+  .deposit-card {
+    padding: 24px;
+  }
+
+  .deposit-card h3 {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-header {
+    padding: 16px 20px 12px;
+  }
+
+  .page-title {
+    font-size: 20px;
+  }
+
+  .page-subtitle {
+    font-size: 13px;
+  }
+
+  .deposit-layout {
+    margin: 0 16px 20px;
+    gap: 16px;
+  }
+
+  .deposit-card {
+    padding: 20px;
+  }
+
+  .deposit-card h3 {
+    font-size: 15px;
+    margin-bottom: 18px;
+  }
+
+  .form-group {
+    margin-bottom: 14px;
+  }
+
+  .form-group label {
+    font-size: 13px;
+  }
+
+  .form-group select {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+
+  .address-box {
+    padding: 12px;
+  }
+
+  .address-label {
+    font-size: 12px;
+  }
+
+  .address-value {
+    margin-top: 6px;
+  }
+
+  .address-value code {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+
+  .copy-btn {
+    padding: 8px;
+  }
+
+  .network-warning {
+    padding: 12px;
+    font-size: 12px;
+  }
+
+  .qr-card,
+  .info-card {
+    padding: 20px;
+  }
+
+  .qr-card h4,
+  .info-card h4 {
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+
+  .qr-box {
+    padding: 12px;
+  }
+
+  .qr-box img {
+    width: 140px;
+    height: 140px;
+  }
+
+  .qr-hint {
+    font-size: 12px;
+  }
+
+  .info-card ul {
+    font-size: 13px;
+  }
+
+  .info-card li {
+    padding: 6px 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-title {
+    font-size: 18px;
+  }
+
+  .deposit-layout {
+    margin: 0 12px 16px;
+  }
+
+  .deposit-card,
+  .qr-card,
+  .info-card {
+    padding: 16px;
+  }
+
+  .qr-box img {
+    width: 120px;
+    height: 120px;
+  }
+}

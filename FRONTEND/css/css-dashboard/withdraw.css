@@ -102,3 +102,141 @@
   font-size: 18px;
   margin-top: 2px;
 }
+
+/* ===== RESPONSIVE MOBILE ===== */
+@media (max-width: 1024px) {
+  .withdraw-layout {
+    grid-template-columns: 1fr;
+    padding: 0 24px 24px;
+    gap: 20px;
+  }
+
+  .withdraw-card {
+    padding: 24px;
+  }
+
+  .withdraw-card h3 {
+    font-size: 16px;
+    margin-bottom: 18px;
+  }
+
+  .form-group input,
+  .form-group select {
+    padding: 12px;
+    font-size: 13px;
+  }
+
+  .form-group label {
+    font-size: 13px;
+  }
+
+  .form-group small {
+    font-size: 11px;
+  }
+
+  .primary-btn {
+    padding: 14px;
+    font-size: 14px;
+    margin-top: 8px;
+  }
+
+  .withdraw-summary {
+    padding: 20px;
+  }
+
+  .withdraw-summary h4 {
+    font-size: 15px;
+    margin-bottom: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .withdraw-layout {
+    padding: 0 16px 20px;
+    gap: 16px;
+  }
+
+  .withdraw-card,
+  .withdraw-summary {
+    padding: 20px;
+  }
+
+  .withdraw-card h3 {
+    font-size: 15px;
+  }
+
+  .form-group {
+    margin-bottom: 12px;
+    gap: 4px;
+  }
+
+  .form-group label {
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  .form-group input,
+  .form-group select {
+    padding: 10px 12px;
+    font-size: 13px;
+    border-radius: 10px;
+  }
+
+  .form-group small {
+    font-size: 11px;
+  }
+
+  .primary-btn {
+    padding: 12px;
+    font-size: 13px;
+    margin-top: 6px;
+    border-radius: 12px;
+    gap: 6px;
+  }
+
+  .withdraw-summary h4 {
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+
+  .summary-item {
+    margin-bottom: 10px;
+    font-size: 13px;
+  }
+
+  .summary-item.total {
+    padding-top: 10px;
+  }
+
+  .alert-box {
+    margin-top: 16px;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 12px;
+    gap: 8px;
+  }
+
+  .alert-box i {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .withdraw-layout {
+    padding: 0 12px 16px;
+  }
+
+  .withdraw-card,
+  .withdraw-summary {
+    padding: 16px;
+  }
+
+  .withdraw-card h3 {
+    font-size: 14px;
+  }
+
+  .primary-btn {
+    padding: 11px;
+    font-size: 12px;
+  }
+}

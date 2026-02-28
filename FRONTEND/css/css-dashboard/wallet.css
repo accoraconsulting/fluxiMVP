@@ -380,13 +380,114 @@
 /* ===============================
    RESPONSIVE PARA BOTONES
 ================================ */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
+  .page-header {
+    padding: 20px 24px 12px;
+  }
+
+  .page-title {
+    font-size: 24px;
+  }
+
+  .balance-hero {
+    margin: 20px 24px 24px;
+    padding: 24px;
+  }
+
+  .balance-info h2 {
+    font-size: 36px;
+  }
+
   .asset-actions {
     flex-direction: column;
   }
 
   .asset-btn {
     width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-header {
+    padding: 16px 16px 12px;
+  }
+
+  .page-title {
+    font-size: 20px;
+  }
+
+  .page-subtitle {
+    font-size: 13px;
+  }
+
+  .balance-hero {
+    margin: 16px 16px 20px;
+    padding: 20px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .balance-info h2 {
+    font-size: 32px;
+    margin: 8px 0 4px;
+  }
+
+  .balance-info span.label {
+    font-size: 12px;
+  }
+
+  .balance-info small {
+    font-size: 12px;
+  }
+
+  .asset-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .asset-btn {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+
+  .recent-activity {
+    margin: 0 16px 20px;
+    padding: 20px;
+  }
+
+  .recent-activity h3 {
+    font-size: 16px;
+    margin-bottom: 16px;
+  }
+
+  .recent-activity h3 i {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-title {
+    font-size: 18px;
+  }
+
+  .balance-hero {
+    margin: 12px 12px 16px;
+    padding: 16px;
+  }
+
+  .balance-info h2 {
+    font-size: 28px;
+  }
+
+  .recent-activity {
+    margin: 0 12px 16px;
+    padding: 16px;
+  }
+
+  .recent-activity h3 {
+    font-size: 15px;
   }
 }
 
