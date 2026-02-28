@@ -5,19 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FLUXI - Plataforma Fintech de Pagos</title>
     <link rel="stylesheet" href="./css/index.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
     <!-- NAVBAR -->
     <nav>
-        <div class="nav-logo-text">FLUXI</div>
+        <a href="index.html" class="nav-logo-container">
+            <img src="./assets/fluxi2.png" alt="FLUXI Logo" class="nav-logo-img">
+        </a>
         <div class="nav-menu">
-            <a href="#about">Plataforma</a>
+            <a href="#about">Nosotros</a>
             <a href="#compliance">Seguridad</a>
-            <a href="#showcase">Características</a>
+            <a href="#showcase">Casos de uso</a>
+            <a href="#features">Soluciones</a>
         </div>
         <div class="nav-buttons">
-            <a href="./singup.html" class="btn-secondary">REGISTRARSE</a>
-            <a href="./login.html" class="btn-primary">INGRESAR</a>
+            <a href="./singup.html" class="btn-primary">REGÍSTRATE</a>
+            <a href="./login.html" class="btn-secondary">INGRESAR</a>
         </div>
     </nav>
 
@@ -27,10 +36,14 @@
             <div class="hero-content">
                 <h1>Transacciones globales instantáneas con claridad y control en cada operación.</h1>
                 <p>Plataforma fintech moderna para transferencias de dinero, cambio de divisas y pagos seguros. Soportamos múltiples criptomonedas y monedas fiduciarias con estándares bancarios.</p>
-                <a href="./singup.html" class="hero-button">REGISTRATE AHORA</a>
+                <a href="./singup.html" class="hero-button">COMIENZA AHORA!</a>
             </div>
             <div class="hero-image">
-                <img src="./assets/fluxi.png" alt="FLUXI Dashboard" style="max-height: 400px;">
+                <div style="max-width: 95%; margin: 0 auto; overflow: hidden;">
+                    <video autoplay muted loop playsinline style="width: 100%; height: auto; object-fit: contain; display: block;">
+                        <source src="../vedeoflux.mp4" type="video/mp4">
+                    </video>
+                </div>
             </div>
         </div>
 
@@ -50,103 +63,197 @@
         </div>
     </section>
 
-    <!-- ABOUT SECTION -->
-    <section class="about" id="about">
-        <h2>¿Qué es FLUXI?</h2>
-        <p class="about-subtitle">Infraestructura de pagos diseñada para operar con confianza</p>
-        <p class="about-description">
-            FLUXI es una plataforma fintech moderna enfocada en operaciones entre usuarios y empresas.
-            Diseñada para ofrecer control, trazabilidad y cumplimiento en cada transacción.
-        </p>
-        <div class="about-features">
-            <div class="about-feature-card">
-                <div class="about-feature-icon">📁</div>
-                <h3>Transacciones Claras</h3>
-                <p>Cada operación es estructurada, documentada y verificable en cualquier momento</p>
+    <!-- FEATURES SECTION - SAVINGS CALCULATOR -->
+    <section class="savings-section">
+        <div class="savings-container">
+            <div class="savings-content">
+                <h2>Deja de perder dinero en <span class="savings-highlight">comisiones ocultas.</span></h2>
+                <p>Los bancos tradicionales cobran hasta un 4% entre spread cambiario y tarifas fijas. Con Fluxi, tu dinero llega íntegro y más rápido.</p>
+
+                <div class="savings-features">
+                    <div class="savings-feature">
+                        <i class='bx bx-check-circle'></i>
+                        <span>Sin costos de mantenimiento de cuenta</span>
+                    </div>
+                    <div class="savings-feature">
+                        <i class='bx bx-check-circle'></i>
+                        <span>Tasa de cambio mayorista real</span>
+                    </div>
+                    <div class="savings-feature">
+                        <i class='bx bx-check-circle'></i>
+                        <span>Tracking del pago en tiempo real</span>
+                    </div>
+                    <div class="savings-feature">
+                        <i class='bx bx-check-circle'></i>
+                        <span>Soporte prioritario para importadores</span>
+                    </div>
+                </div>
             </div>
-            <div class="about-feature-card">
-                <div class="about-feature-icon">👁️</div>
-                <h3>Visibilidad Completa</h3>
-                <p>Dashboard intuitivo con seguimiento en tiempo real de todas tus operaciones</p>
-            </div>
-            <div class="about-feature-card">
-                <div class="about-feature-icon">✅</div>
-                <h3>Diseño Seguro</h3>
-                <p>Enfoque regulatorio desde el diseño con encriptación de nivel bancario</p>
+
+            <div class="calculator-box">
+                <div class="calculator-icon-corner">
+                    <i class='bx bxs-bar-chart-alt-2'></i>
+                </div>
+                <div class="calculator-header">
+                    <label>MONTO A ENVIAR (USD)</label>
+                </div>
+
+                <div class="calculator-input">
+                    <span>$</span>
+                    <input type="number" id="amountInput" value="10000" placeholder="10000">
+                </div>
+
+                <div class="calculator-results">
+                    <div class="result-item">
+                        <span>Costo en Banco Tradicional</span>
+                        <span class="cost-traditional" id="tradCost">-$395.00</span>
+                    </div>
+                    <div class="result-item">
+                        <span>Costo en Fluxi</span>
+                        <span class="cost-fluxi" id="fluxiCost">-$80.00</span>
+                    </div>
+                    <div class="result-item savings-total">
+                        <span>Tu ahorro con Fluxi</span>
+                        <span class="savings-amount" id="savingsAmount">+$315.00</span>
+                    </div>
+                </div>
+
+                <button class="btn-guarantee">Garantizar esta tasa hoy</button>
             </div>
         </div>
     </section>
 
-    <!-- FEATURES SECTION -->
-    <section class="features">
-        <div class="features-grid">
-            <div class="feature-item">
-                <div class="feature-item-top">
-                    <div class="feature-item-icon">💰</div>
-                    <div class="feature-item-header">
-                        <h3>Conversión de Divisas Integrada</h3>
-                        <p>Cambia entre múltiples monedas con tasas competitivas y sin cargos ocultos</p>
-                    </div>
+    <!-- ABOUT SECTION -->
+    <section class="about" id="about">
+        <h2>Diseñado para el <span class="gradient-text">comercio global</span></h2>
+        <p class="about-subtitle">Tecnología de punta para procesos que antes tomaban semanas.</p>
+        <div class="about-features">
+            <div class="about-feature-card">
+                <div class="about-feature-icon">
+                    <i class='bx bxs-zap'></i>
                 </div>
+                <h3>Velocidad Instantánea</h3>
+                <p>Liquidación en minutos. No esperes a que el SWIFT pase por 3 bancos corresponsales.</p>
             </div>
-
-            <div class="feature-item">
-                <div class="feature-item-top">
-                    <div class="feature-item-icon">⚙️</div>
-                    <div class="feature-item-header">
-                        <h3>Procesamiento Inteligente</h3>
-                        <p>Automatización de flujos de pago con validaciones y controles integrados</p>
-                    </div>
+            <div class="about-feature-card">
+                <div class="about-feature-icon">
+                    <i class='bx bx-globe'></i>
                 </div>
+                <h3>Cobertura Global</h3>
+                <p>Paga directamente a proveedores en China (CNY/USD), Europa y EE.UU. sin fricciones.</p>
             </div>
-
-            <div class="feature-item">
-                <div class="feature-item-top">
-                    <div class="feature-item-icon">🔒</div>
-                    <div class="feature-item-header">
-                        <h3>Máxima Seguridad</h3>
-                        <p>Protección total de tus datos con encriptación de nivel institucional</p>
-                    </div>
+            <div class="about-feature-card">
+                <div class="about-feature-icon">
+                    <i class='bx bxs-shield-alt-2'></i>
                 </div>
-            </div>
-
-            <div class="feature-item">
-                <div class="feature-item-top">
-                    <div class="feature-item-icon">📊</div>
-                    <div class="feature-item-header">
-                        <h3>Reportes y Monitoreo</h3>
-                        <p>Seguimiento detallado del estado de pagos antes, durante y después de la ejecución</p>
-                    </div>
-                </div>
+                <h3>Compliance Pro</h3>
+                <p>Validación automática de facturas y cumplimiento legal para aduanas en minutos.</p>
             </div>
         </div>
     </section>
 
     <!-- SHOWCASE SECTION -->
     <section class="showcase" id="showcase">
-        <div class="showcase-container">
-            <div class="showcase-content">
-                <h2>Orquesta tus pagos globales sin complicaciones.</h2>
-                <p>FLUXI sincroniza cada operación como una orquesta perfecta. Múltiples monedas, múltiples países, un único ritmo: eficiencia, seguridad y control total en cada transacción.</p>
-                <a href="./singup.html" class="showcase-button">REGISTRATE AHORA</a>
-            </div>
-            <div class="showcase-image">
-                <img src="./assets/fluxi.png" alt="FLUXI Dashboard" style="max-height: 350px;">
-            </div>
+        <div class="showcase-content-center">
+            <h2>Paga en minutos<br><span class="showcase-highlight">sin comisiones ocultas</span></h2>
+            <p>Elimina las comisiones SWIFT y la burocracia bancaria. Fluxi permite a PYMES e importadores enviar pagos internacionales con la tasa de cambio más baja del mercado.</p>
         </div>
 
-        <div class="showcase-features-bar">
-            <div class="showcase-feature-item">
-                <strong>Pagos estructurados y auditables</strong>
+    </section>
+
+    <!-- INFRASTRUCTURE SECTION -->
+    <section class="infrastructure">
+        <div class="infrastructure-container">
+            <div class="infrastructure-content">
+                <div class="infrastructure-label">
+                    <i class='bx bx-lock'></i>
+                    <span>EL PROBLEMA</span>
+                </div>
+                <h2>La infraestructura<br>global está rota</h2>
+                <p>Construir y escalar servicios financieros a través de fronteras no solo es complejo, es fragmentado. Cada mercado tiene sus propios proveedores, regulaciones, impuestos, monedas y preferencias de clientes. Eso significa que las empresas se ven obligadas a unir docenas de sistemas solo para operar internacionalmente.</p>
             </div>
-            <div class="showcase-feature-item">
-                <strong>Visibilidad completa del proceso</strong>
+
+            <div class="infrastructure-diagram-wrapper">
+                <div class="infrastructure-image" data-aos="fade-up" data-aos-duration="1000">
+                <!-- Antes de Fluxi -->
+                <div class="infrastructure-diagram diagram-before active" id="diagram-before">
+                    <div id="ec-chart-before" class="ec-chart-container"></div>
+                </div>
+
+                <!-- Después de Fluxi -->
+                <div class="infrastructure-diagram diagram-after" id="diagram-after">
+                    <div id="ec-chart-after" class="ec-chart-container"></div>
+                </div>
             </div>
-            <div class="showcase-feature-item">
-                <strong>Enfoque regulatorio desde el diseño</strong>
+
+                <div class="infrastructure-tabs">
+                    <div class="tab-button active" data-tab="before">
+                        <span>Antes de Fluxi</span>
+                    </div>
+                    <div class="tab-button" data-tab="after">
+                        <span>Después de Fluxi</span>
+                    </div>
+                </div>
             </div>
-            <div class="showcase-feature-item">
-                <strong>Escalable a medida que tu operación crece</strong>
+        </div>
+    </section>
+
+    <!-- SOLUTION SECTION -->
+    <section class="solution" id="solution">
+        <div class="solution-container">
+            <div class="solution-header">
+                <span class="solution-label">
+                    <i class='bx bxs-check-circle'></i> LA SOLUCIÓN
+                </span>
+                <h2>Una capa de infraestructura<br>unificada para pagos globales</h2>
+            </div>
+
+            <div class="solution-cards">
+                <div class="solution-card" style="--accent-color: #764ba2;">
+                    <div class="solution-card-number">01.</div>
+                    <div id="chart-impulsa" class="solution-card-chart-ec"></div>
+                    <div class="solution-card-stats">
+                        <p><strong style="color: #764ba2;">+21%</strong> <span>en ingresos</span></p>
+                        <p><strong style="color: #51cf66;">+18%</strong> <span>en aprobación</span></p>
+                    </div>
+                    <h3>IMPULSA INGRESOS</h3>
+                    <p>Aumenta conversión y aprobación con orquestación inteligente.</p>
+                </div>
+
+                <div class="solution-card" style="--accent-color: #667eea;">
+                    <div class="solution-card-number">02.</div>
+                    <div class="cost-comparison">
+                        <div class="cost-item">
+                            <div class="cost-label">Costo tradicional</div>
+                            <div class="cost-bar traditional">
+                                <div class="cost-fill traditional-fill"></div>
+                                <span class="cost-value traditional-value">$1000</span>
+                            </div>
+                        </div>
+                        <div class="cost-item">
+                            <div class="cost-label">Con FLUXI</div>
+                            <div class="cost-bar fluxi">
+                                <div class="cost-fill fluxi-fill"></div>
+                                <span class="cost-value fluxi-value">$500</span>
+                            </div>
+                        </div>
+                    </div>
+                    <h3>REDUCE COSTOS</h3>
+                    <p>Disminuye la carga operativa y comisiones con ruteo optimizado.</p>
+                    <div class="solution-card-savings">
+                        <span style="color: #764ba2; font-weight: 700;">21% en ahorros</span>
+                    </div>
+                </div>
+
+                <div class="solution-card" style="--accent-color: #51cf66;">
+                    <div class="solution-card-number">03.</div>
+                    <div id="leaflet-map" class="leaflet-map-container"></div>
+                    <h3>ESCALA MAS RÁPIDO</h3>
+                    <p>Lanza en nuevas regiones sin empezar desde cero.</p>
+                    <div class="solution-card-reach">
+                        <span style="color: #667eea; font-weight: 700;">+150 países</span>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -155,45 +262,86 @@
     <section class="compliance" id="compliance">
         <div class="compliance-card">
             <h2>Confianza y Seguridad</h2>
-            <p class="compliance-card-subtitle">La confianza no es un extra. Es parte del sistema.</p>
-            <p class="compliance-card-description">
-                FLUXI está diseñado para operar con estándares empresariales y regulatorios.
-                Cada pago es claro, trazable y controlado desde su origen hasta su cierre.
-            </p>
+            <p class="compliance-card-subtitle">La confianza no es un extra, es parte del sistema.</p>
+            <p class="compliance-card-description">FLUXI está diseñado para operar con estándares empresariales y regulatorios.</p>
+            <p class="compliance-card-description">Cada pago es claro, trazable y controlado desde su origen hasta su cierre.</p>
             <div class="compliance-features">
                 <div class="compliance-feature">
-                    <div class="compliance-feature-dot"></div>
-                    <p><strong>Control antes, durante y después</strong> - Validación completa en cada fase</p>
+                    <div class="compliance-feature-title-group">
+                        <div class="compliance-feature-dot"></div>
+                        <strong class="compliance-feature-title">Control antes, durante y después</strong>
+                    </div>
+                    <p class="compliance-feature-subtitle">Validación completa en cada fase</p>
                 </div>
                 <div class="compliance-feature">
-                    <div class="compliance-feature-dot"></div>
-                    <p><strong>Infraestructura segura</strong> - Estándares bancarios en cada capa</p>
+                    <div class="compliance-feature-title-group">
+                        <div class="compliance-feature-dot"></div>
+                        <strong class="compliance-feature-title">Infraestructura segura</strong>
+                    </div>
+                    <p class="compliance-feature-subtitle">Estándares bancarios en cada capa</p>
                 </div>
                 <div class="compliance-feature">
-                    <div class="compliance-feature-dot"></div>
-                    <p><strong>Enfoque en cumplimiento</strong> - Regulación desde el diseño</p>
+                    <div class="compliance-feature-title-group">
+                        <div class="compliance-feature-dot"></div>
+                        <strong class="compliance-feature-title">Enfoque en cumplimiento</strong>
+                    </div>
+                    <p class="compliance-feature-subtitle">Regulación desde el diseño</p>
                 </div>
                 <div class="compliance-feature">
-                    <div class="compliance-feature-dot"></div>
-                    <p><strong>Operaciones auditables</strong> - Trazabilidad total garantizada</p>
+                    <div class="compliance-feature-title-group">
+                        <div class="compliance-feature-dot"></div>
+                        <strong class="compliance-feature-title">Operaciones auditables</strong>
+                    </div>
+                    <p class="compliance-feature-subtitle">Trazabilidad total garantizada</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- FOOTER -->
-    <footer>
-        <div class="footer-content">
+    <footer class="footer">
+        <div class="footer-top">
             <div class="footer-brand">
-                <div class="footer-brand-text">FLUXI</div>
-                <p>FLUXI - cuando la confianza es parte del pago. Plataforma fintech moderna para operaciones globales con claridad y control.</p>
+                <img src="./assets/fluxi.png" alt="FLUXI Logo" class="footer-logo-img">
+                <p class="footer-description">FLUXI - cuando la confianza es parte del pago. Plataforma fintech moderna para operaciones globales con claridad y control.</p>
+                <div class="footer-socials">
+                    <a href="#" class="social-link" title="Telegram">
+                        <i class='bx bxl-telegram'></i>
+                    </a>
+                    <a href="#" class="social-link" title="Facebook">
+                        <i class='bx bxl-facebook'></i>
+                    </a>
+                    <a href="#" class="social-link" title="Instagram">
+                        <i class='bx bxl-instagram'></i>
+                    </a>
+                    <a href="#" class="social-link" title="LinkedIn">
+                        <i class='bx bxl-linkedin'></i>
+                    </a>
+                    <a href="#" class="social-link" title="Twitter">
+                        <i class='bx bxl-twitter'></i>
+                    </a>
+                </div>
             </div>
+
+            <div class="footer-column">
+                <h4>Contáctanos</h4>
+                <a href="mailto:hola@fluxi.com"><i class='bx bx-envelope'></i>hola@fluxi.com</a>
+            </div>
+
             <div class="footer-column">
                 <h4>Plataforma</h4>
                 <a href="#about">Características</a>
                 <a href="#compliance">Seguridad</a>
                 <a href="#showcase">Operaciones</a>
             </div>
+
+            <div class="footer-column">
+                <h4>Empresa</h4>
+                <a href="#">Acerca de</a>
+                <a href="#">Blog</a>
+                <a href="#">Carreras</a>
+            </div>
+
             <div class="footer-column">
                 <h4>Legal</h4>
                 <a href="#">Términos y Condiciones</a>
@@ -201,9 +349,21 @@
                 <a href="#">Contacto</a>
             </div>
         </div>
+
+        <div class="footer-divider"></div>
+
         <div class="footer-bottom">
-            <p>&copy; 2026 FLUXI Tech. Todos los derechos reservados.</p>
-            <p>Made with ❤️ by <a href="https://accoraconsulting.com/" target="_blank" rel="noopener noreferrer">Accora</a></p>
+            <div>
+                <p>&copy; 2026 FLUXI Tech. Todos los derechos reservados.</p>
+            </div>
+            <div class="footer-legal-links">
+                <a href="#">Políticas</a>
+                <a href="#">Privacidad</a>
+                <a href="#">Términos</a>
+            </div>
+        </div>
+        <div class="footer-credit">
+            <p>Made by <a href="https://accoraconsulting.com/" target="_blank" rel="noopener noreferrer">Accora</a></p>
         </div>
     </footer>
 
@@ -211,5 +371,504 @@
     <script src="./js/index.js"></script>
 <!-- 🔐 SISTEMA DE PERMISOS GLOBAL -->
 <script type="module" src="./js/permissions/init-permissions.js"></script>
+
+<script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script>
+// Inicializar AOS
+AOS.init();
+
+// ═══════════════════════════════════════════════
+// MAPA LEAFLET - SOLO CONTENEDOR 3
+// ═══════════════════════════════════════════════
+if (document.getElementById('leaflet-map')) {
+    const mapElement = document.getElementById('leaflet-map');
+    const map = L.map(mapElement, {
+        center: [20, 10],
+        zoom: 1,
+        zoomControl: false,
+        attributionControl: false,
+        dragging: false,
+        touchZoom: false,
+        scrollWheelZoom: false,
+        doubleClickZoom: false
+    });
+
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
+        attribution: '',
+        maxZoom: 19
+    }).addTo(map);
+
+    // Más ciudades en todos los continentes
+    const countries = [
+        // Estados Unidos
+        { name: 'New York', coords: [40.7128, -74.0060], delay: 0 },
+        { name: 'Los Angeles', coords: [34.0522, -118.2437], delay: 200 },
+        { name: 'Chicago', coords: [41.8781, -87.6298], delay: 400 },
+        { name: 'Houston', coords: [29.7604, -95.3698], delay: 600 },
+        { name: 'Miami', coords: [25.7617, -80.1918], delay: 800 },
+        { name: 'San Francisco', coords: [37.7749, -122.4194], delay: 1000 },
+
+        // México
+        { name: 'Mexico City', coords: [19.4326, -99.1332], delay: 1200 },
+        { name: 'Guadalajara', coords: [20.6597, -103.3496], delay: 1400 },
+        { name: 'Monterrey', coords: [25.6866, -100.3161], delay: 1600 },
+        { name: 'Cancún', coords: [21.1619, -87.0385], delay: 1800 },
+
+        // Canadá
+        { name: 'Toronto', coords: [43.6629, -79.3957], delay: 2000 },
+        { name: 'Vancouver', coords: [49.2827, -123.1207], delay: 2200 },
+
+        // América Central
+        { name: 'San José', coords: [9.9281, -84.0907], delay: 2400 },
+        { name: 'Panama City', coords: [8.9824, -79.5199], delay: 2600 },
+
+        // América del Sur - Colombia
+        { name: 'Bogotá', coords: [4.7110, -74.0721], delay: 2800 },
+        { name: 'Medellín', coords: [6.2442, -75.5812], delay: 3000 },
+
+        // América del Sur - Perú, Ecuador, Venezuela
+        { name: 'Lima', coords: [-12.0464, -77.0428], delay: 3200 },
+        { name: 'Quito', coords: [-0.2299, -78.5249], delay: 3400 },
+        { name: 'Caracas', coords: [10.4806, -66.9036], delay: 3600 },
+
+        // América del Sur - Brasil
+        { name: 'São Paulo', coords: [-23.5505, -46.6333], delay: 3800 },
+        { name: 'Rio de Janeiro', coords: [-22.9068, -43.1729], delay: 4000 },
+        { name: 'Brasília', coords: [-15.8267, -47.8711], delay: 4200 },
+        { name: 'Salvador', coords: [-12.9714, -38.5014], delay: 4400 },
+
+        // América del Sur - Chile, Argentina
+        { name: 'Santiago', coords: [-33.4489, -70.6693], delay: 4600 },
+        { name: 'Buenos Aires', coords: [-34.6037, -58.3816], delay: 4800 },
+
+        // Europa
+        { name: 'London', coords: [51.5074, -0.1278], delay: 5000 },
+        { name: 'Paris', coords: [48.8566, 2.3522], delay: 1600 },
+        { name: 'Frankfurt', coords: [50.1109, 8.6821], delay: 1800 },
+        { name: 'Amsterdam', coords: [52.3676, 4.9041], delay: 2000 },
+        { name: 'Milan', coords: [45.4642, 9.1900], delay: 2200 },
+
+        // Oriente Medio
+        { name: 'Dubai', coords: [25.2048, 55.2708], delay: 2400 },
+        { name: 'Istanbul', coords: [41.0082, 28.9784], delay: 2600 },
+
+        // Asia
+        { name: 'Tokyo', coords: [35.6762, 139.6503], delay: 2800 },
+        { name: 'Shanghai', coords: [31.2304, 121.4737], delay: 3000 },
+        { name: 'Singapore', coords: [1.3521, 103.8198], delay: 3200 },
+        { name: 'Bangkok', coords: [13.7563, 100.5018], delay: 3400 },
+        { name: 'Hong Kong', coords: [22.3193, 114.1694], delay: 3600 },
+
+        // Oceanía
+        { name: 'Sydney', coords: [-33.8688, 151.2093], delay: 3800 },
+        { name: 'Melbourne', coords: [-37.8136, 144.9631], delay: 4000 },
+
+        // África
+        { name: 'Johannesburg', coords: [-26.2023, 28.0436], delay: 4200 },
+        { name: 'Lagos', coords: [6.5244, 3.3792], delay: 4400 },
+        { name: 'Cairo', coords: [30.0444, 31.2357], delay: 4600 }
+    ];
+
+    // Crear marcadores animados
+    countries.forEach((country, idx) => {
+        const circle = L.circleMarker(country.coords, {
+            radius: 5,
+            fillColor: '#764ba2',
+            color: '#6b3fa0',
+            weight: 2,
+            opacity: 0,
+            fillOpacity: 0
+        }).addTo(map);
+
+        // Animar círculo - Iluminación secuencial
+        let cycle = 0;
+        setInterval(() => {
+            cycle = (cycle + 1) % 9;
+
+            if (cycle === 0) {
+                // Reset
+                circle.setStyle({ opacity: 0, fillOpacity: 0 });
+            } else if (cycle <= 4) {
+                // Iluminar (fade in + pulsing)
+                const pulse = 5 + Math.sin(Date.now() / 200) * 2;
+                circle.setRadius(pulse);
+                circle.setStyle({
+                    opacity: 0.9,
+                    fillOpacity: 0.8,
+                    fillColor: '#764ba2'
+                });
+            } else {
+                // Apagar (fade out)
+                circle.setStyle({
+                    opacity: 0.3 - (cycle - 4) * 0.1,
+                    fillOpacity: 0.3 - (cycle - 4) * 0.1
+                });
+            }
+        }, 300 + idx * 50);
+    });
+}
+
+// Calculadora de Ahorros
+const amountInput = document.getElementById('amountInput');
+const tradCost = document.getElementById('tradCost');
+const fluxiCost = document.getElementById('fluxiCost');
+const savingsAmount = document.getElementById('savingsAmount');
+
+function updateCalculator() {
+    const amount = parseFloat(amountInput.value) || 0;
+
+    // Banco Tradicional: 4% de comisión
+    const tradCostValue = amount * 0.04;
+
+    // Fluxi: 0.8% de comisión
+    const fluxiCostValue = amount * 0.008;
+
+    // Ahorro: diferencia
+    const savings = tradCostValue - fluxiCostValue;
+
+    tradCost.textContent = `-$${tradCostValue.toFixed(2)}`;
+    fluxiCost.textContent = `-$${fluxiCostValue.toFixed(2)}`;
+    savingsAmount.textContent = `+$${savings.toFixed(2)}`;
+}
+
+amountInput.addEventListener('input', updateCalculator);
+amountInput.addEventListener('change', updateCalculator);
+
+// Inicializar
+updateCalculator();
+
+// ═══════════════════════════════════════════════
+// ECHARTS - Antes de Fluxi (Force-directed Graph)
+// ═══════════════════════════════════════════════
+window.addEventListener('load', function () {
+
+    // ═══════════════════════════════════════════════
+    // GRÁFICO DE BARRAS - Tarjeta 01 "IMPULSA INGRESOS"
+    // ═══════════════════════════════════════════════
+    const ecImpulsa = echarts.init(document.getElementById('chart-impulsa'), null, { renderer: 'canvas' });
+
+    const impulseOption = {
+        backgroundColor: 'transparent',
+        tooltip: {
+            trigger: 'axis',
+            backgroundColor: 'rgba(26,26,46,0.92)',
+            borderColor: '#764ba2',
+            borderWidth: 1,
+            textStyle: { color: '#fff', fontSize: 11 },
+            axisPointer: { type: 'shadow' },
+            formatter: function(params) {
+                if (params && params[0]) {
+                    return `<b>${params[0].name}</b><br/>${params[0].value}%`;
+                }
+                return '';
+            }
+        },
+        grid: {
+            left: '8%',
+            right: '8%',
+            top: '8%',
+            bottom: '15%',
+            containLabel: true
+        },
+        xAxis: {
+            type: 'category',
+            data: ['Ingresos', 'Aprobación'],
+            axisLine: { show: false },
+            axisTick: { show: false },
+            axisLabel: {
+                fontSize: 10,
+                color: '#999',
+                fontWeight: 500
+            }
+        },
+        yAxis: {
+            type: 'value',
+            min: 0,
+            max: 100,
+            splitLine: { lineStyle: { color: 'rgba(102,126,234,0.1)', type: 'dashed' } },
+            axisLabel: {
+                fontSize: 9,
+                color: '#999',
+                formatter: '{value}%'
+            }
+        },
+        series: [
+            {
+                name: 'Incremento',
+                data: [0, 0],
+                type: 'bar',
+                itemStyle: {
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                        { offset: 0, color: '#764ba2' },
+                        { offset: 1, color: '#51cf66' }
+                    ]),
+                    borderRadius: [8, 8, 0, 0],
+                    shadowColor: 'rgba(118, 75, 162, 0.3)',
+                    shadowBlur: 8,
+                    shadowOffsetY: 4
+                },
+                animationDuration: 0,
+                barWidth: '50%',
+                emphasis: {
+                    itemStyle: {
+                        opacity: 0.95,
+                        shadowBlur: 12
+                    }
+                }
+            }
+        ]
+    };
+
+    ecImpulsa.setOption(impulseOption);
+
+    // ═══════════════════════════════════════════════
+    // ANIMACIÓN INFINITA RÁPIDA - Barras y números de 0 a 100
+    // ═══════════════════════════════════════════════
+    const impulseCard = document.querySelector('.solution-card');
+    const statsElements = impulseCard.querySelectorAll('.solution-card-stats strong');
+
+    const animateChart = () => {
+        // Animar barras del gráfico - suave y elegante
+        ecImpulsa.setOption({
+            series: [{
+                data: [100, 100],
+                animationDuration: 2500,
+                animationEasing: 'cubicInOut'
+            }]
+        });
+
+        // Animar números de estadísticas de 0 a 100 - sincronizado
+        animateNumber(statsElements[0], 0, 100, 2500);
+        animateNumber(statsElements[1], 0, 100, 2500);
+    };
+
+    // Función para animar números
+    function animateNumber(element, start, end, duration) {
+        if (!element) return;
+
+        const startTime = Date.now();
+
+        const animate = () => {
+            const elapsed = Date.now() - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const value = Math.floor(start + (end - start) * progress);
+            element.textContent = `+${value}%`;
+
+            if (progress < 1) {
+                requestAnimationFrame(animate);
+            } else {
+                element.textContent = `+${end}%`;
+            }
+        };
+
+        animate();
+    }
+
+    // Iniciar animación inmediata
+    animateChart();
+
+    // Repetir animación cada 5.5 segundos
+    setInterval(() => {
+        // Resetear a 0
+        ecImpulsa.setOption({
+            series: [{
+                data: [0, 0],
+                animationDuration: 0
+            }]
+        });
+
+        statsElements[0].textContent = '+0%';
+        statsElements[1].textContent = '+0%';
+
+        // Animar después de 1 segundo de pausa
+        setTimeout(() => {
+            animateChart();
+        }, 1000);
+    }, 5500);
+
+    // ── ANTES DE FLUXI ──────────────────────────
+    const ecBefore = echarts.init(document.getElementById('ec-chart-before'), null, { renderer: 'canvas' });
+
+    const beforeOption = {
+        backgroundColor: 'transparent',
+        tooltip: {
+            trigger: 'item',
+            backgroundColor: 'rgba(26,26,46,0.92)',
+            borderColor: '#ff6b6b',
+            borderWidth: 1,
+            textStyle: { color: '#fff', fontSize: 12 },
+            formatter: '{b}'
+        },
+        series: [{
+            type: 'graph',
+            layout: 'force',
+            animation: true,
+            animationDuration: 1500,
+            animationEasingUpdate: 'quadraticInOut',
+            force: {
+                repulsion: 600,
+                gravity: 0.01,
+                edgeLength: [120, 200],
+                friction: 0.6
+            },
+            roam: false,
+            draggable: false,
+            edgeSymbol: ['none', 'arrow'],
+            edgeSymbolSize: [0, 7],
+            label: {
+                show: true,
+                fontSize: 11,
+                fontWeight: 'bold',
+                color: '#fff',
+                position: 'inside',
+                overflow: 'truncate',
+                width: 55,
+                lineHeight: 15
+            },
+            itemStyle: { shadowBlur: 12, shadowColor: 'rgba(0,0,0,0.3)', shadowOffsetY: 2 },
+            lineStyle: {
+                opacity: 0.55,
+                width: 1.5,
+                curveness: 0.28,
+                color: 'rgba(255,107,107,0.6)'
+            },
+            emphasis: {
+                focus: 'adjacency',
+                lineStyle: { width: 3, opacity: 1 }
+            },
+            data: [
+                { name: 'IMPORTADOR',       symbolSize: 75, itemStyle: { color: '#764ba2', borderColor: '#6b3fa0', borderWidth: 2.5 }, label: { fontWeight: 700 } },
+                { name: 'E-COMMERCE',       symbolSize: 75, itemStyle: { color: '#667eea', borderColor: '#5a67d8', borderWidth: 2.5 }, label: { fontWeight: 700 } },
+                { name: 'PYME',             symbolSize: 75, itemStyle: { color: '#51cf66', borderColor: '#40c057', borderWidth: 2.5 }, label: { fontWeight: 700 } },
+                { name: 'SWIFT',            symbolSize: 65, itemStyle: { color: '#764ba2', borderColor: '#6b3fa0', borderWidth: 2.5 } },
+                { name: 'WIRE TRANSFER',    symbolSize: 65, itemStyle: { color: '#667eea', borderColor: '#5a67d8', borderWidth: 2.5 } },
+                { name: 'FIAT',           symbolSize: 65, itemStyle: { color: '#51cf66', borderColor: '#40c057', borderWidth: 2.5 } },
+                { name: 'BANK API',         symbolSize: 65, itemStyle: { color: '#764ba2', borderColor: '#6b3fa0', borderWidth: 2.5 } },
+                { name: 'FX',               symbolSize: 65, itemStyle: { color: '#667eea', borderColor: '#5a67d8', borderWidth: 2.5 } }
+            ],
+            links: [
+                { source: 'IMPORTADOR', target: 'SWIFT' },
+                { source: 'IMPORTADOR', target: 'BANK API' },
+                { source: 'IMPORTADOR', target: 'FX' },
+                { source: 'E-COMMERCE', target: 'WIRE TRANSFER' },
+                { source: 'E-COMMERCE', target: 'FIAT' },
+                { source: 'E-COMMERCE', target: 'SWIFT' },
+                { source: 'E-COMMERCE', target: 'BANK API' },
+                { source: 'PYME', target: 'WIRE TRANSFER' },
+                { source: 'PYME', target: 'BANK API' },
+                { source: 'PYME', target: 'FX' },
+                { source: 'PYME', target: 'FIAT' },
+                { source: 'SWIFT', target: 'FX' },
+                { source: 'BANK API', target: 'WIRE TRANSFER' },
+                { source: 'FIAT', target: 'FX' }
+            ]
+        }]
+    };
+    ecBefore.setOption(beforeOption);
+
+    // ── DESPUÉS DE FLUXI (Sankey Mejorado) ────────────────
+    const ecAfter = echarts.init(document.getElementById('ec-chart-after'), null, { renderer: 'canvas' });
+
+    const afterOption = {
+        backgroundColor: 'transparent',
+        tooltip: {
+            trigger: 'item',
+            triggerOn: 'mousemove',
+            backgroundColor: 'rgba(26,26,46,0.92)',
+            borderColor: '#51cf66',
+            borderWidth: 1,
+            textStyle: { color: '#fff', fontSize: 12 },
+            formatter: function(params) {
+                if (params.dataType === 'edge') {
+                    return `<b>${params.data.source}</b> → <b>${params.data.target}</b><br/><span style="color:#51cf66">Flujo: ${params.data.value}</span>`;
+                }
+                return `<b style="color:#51cf66">${params.name}</b>`;
+            }
+        },
+        series: [{
+            type: 'sankey',
+            layout: 'none',
+            emphasis: { focus: 'adjacency', lineStyle: { opacity: 0.9 } },
+            animationDuration: 1400,
+            animationEasing: 'cubicOut',
+            left: '6%',
+            right: '6%',
+            top: '12%',
+            bottom: '12%',
+            nodeWidth: 42,
+            nodeGap: 28,
+            lineStyle: {
+                color: 'gradient',
+                opacity: 0.55,
+                curveness: 0.6
+            },
+            label: {
+                color: '#1a1a2e',
+                fontWeight: 700,
+                fontSize: 11,
+                distance: 8,
+                overflow: 'truncate',
+                width: 80
+            },
+            itemStyle: { borderRadius: 6, borderWidth: 0 },
+            data: [
+                { name: 'Importadores',      itemStyle: { color: '#667eea' }, label: { fontWeight: 700 } },
+                { name: 'E-commerce',        itemStyle: { color: '#667eea' }, label: { fontWeight: 700 } },
+                { name: 'PyMEs',             itemStyle: { color: '#667eea' } },
+                { name: 'Distrib.',          itemStyle: { color: '#667eea' } },
+                { name: 'Plataformas',       itemStyle: { color: '#667eea' } },
+                { name: 'FLUXI',             itemStyle: { color: '#51cf66' }, label: { color: '#fff', fontWeight: 800, fontSize: 14 } },
+                { name: 'USDT',              itemStyle: { color: '#764ba2' } },
+                { name: 'USD Wire',          itemStyle: { color: '#764ba2' } },
+                { name: 'EUR SEPA',          itemStyle: { color: '#764ba2' } },
+                { name: 'CNY',               itemStyle: { color: '#764ba2' } },
+                { name: 'API',               itemStyle: { color: '#764ba2' } }
+            ],
+            links: [
+                { source: 'Importadores',    target: 'FLUXI', value: 12 },
+                { source: 'E-commerce',      target: 'FLUXI', value: 18 },
+                { source: 'PyMEs',           target: 'FLUXI', value: 8 },
+                { source: 'Distrib.',        target: 'FLUXI', value: 6 },
+                { source: 'Plataformas', target: 'FLUXI', value: 10 },
+                { source: 'FLUXI', target: 'USDT',     value: 16 },
+                { source: 'FLUXI', target: 'USD Wire', value: 14 },
+                { source: 'FLUXI', target: 'EUR SEPA', value: 12 },
+                { source: 'FLUXI', target: 'CNY',      value: 6 },
+                { source: 'FLUXI', target: 'API',      value: 2 }
+            ]
+        }]
+    };
+    ecAfter.setOption(afterOption);
+
+    // Resize on window change
+    window.addEventListener('resize', function () {
+        ecImpulsa.resize();
+        ecBefore.resize();
+        ecAfter.resize();
+    });
+
+    // Tab switching with GSAP + ECharts resize
+    document.querySelectorAll('.tab-button').forEach(button => {
+        button.addEventListener('click', function () {
+            const tabName = this.getAttribute('data-tab');
+            document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+
+            const diagramBefore = document.getElementById('diagram-before');
+            const diagramAfter  = document.getElementById('diagram-after');
+
+            if (tabName === 'before') {
+                gsap.to(diagramAfter,  { opacity: 0, duration: 0.35, pointerEvents: 'none' });
+                gsap.to(diagramBefore, { opacity: 1, duration: 0.35, pointerEvents: 'auto',
+                    onComplete: () => ecBefore.resize() });
+            } else {
+                gsap.to(diagramBefore, { opacity: 0, duration: 0.35, pointerEvents: 'none' });
+                gsap.to(diagramAfter,  { opacity: 1, duration: 0.35, pointerEvents: 'auto',
+                    onComplete: () => ecAfter.resize() });
+            }
+        });
+    });
+});
+</script>
 </body>
 </html>
