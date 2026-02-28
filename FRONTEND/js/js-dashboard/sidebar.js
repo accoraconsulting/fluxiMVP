@@ -84,26 +84,42 @@ export function initSidebar() {
   }
 
   // 📱 Cerrar sidebar en móvil cuando se clickea un link
-  if (isMobile()) {
-    document.querySelectorAll(".menu-item").forEach(link => {
-      link.addEventListener("click", () => {
-        sidebar.classList.remove("mobile-open");
-        const sidebarOverlay = document.getElementById("sidebarOverlay");
-        if (sidebarOverlay) {
-          sidebarOverlay.classList.remove("mobile-open");
+  document.querySelectorAll(".menu-item").forEach(link => {
+    link.addEventListener("click", (e) => {
+      // No cerrar si es el botón logout (que abre un confirm)
+      if (link.id !== "sidebarLogout") {
+        if (isMobile()) {
+          sidebar.classList.remove("mobile-open");
+          const sidebarOverlay = document.getElementById("sidebarOverlay");
+          if (sidebarOverlay) {
+            sidebarOverlay.classList.remove("mobile-open");
+          }
         }
-      });
+      }
     });
+  });
 
-    // Cerrar al clickear overlay
-    const sidebarOverlay = document.getElementById("sidebarOverlay");
-    if (sidebarOverlay) {
-      sidebarOverlay.addEventListener("click", () => {
+  // Cerrar al clickear overlay en móvil
+  const sidebarOverlay = document.getElementById("sidebarOverlay");
+  if (sidebarOverlay) {
+    sidebarOverlay.addEventListener("click", () => {
+      if (isMobile()) {
         sidebar.classList.remove("mobile-open");
         sidebarOverlay.classList.remove("mobile-open");
-      });
-    }
+      }
+    });
   }
+
+  // Cerrar sidebar cuando se redimensiona a desktop
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 768) {
+      sidebar.classList.remove("mobile-open");
+      const sidebarOverlay = document.getElementById("sidebarOverlay");
+      if (sidebarOverlay) {
+        sidebarOverlay.classList.remove("mobile-open");
+      }
+    }
+  });
 
   // 📍 item activo
   const currentPath = window.location.pathname;
