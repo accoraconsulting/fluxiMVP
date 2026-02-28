@@ -33,7 +33,7 @@ function initHamburgerMenu() {
     const navButtons = document.querySelector('.nav-buttons');
     const navOverlay = document.getElementById('navOverlay');
 
-    if (!hamburgerBtn) return;
+    if (!hamburgerBtn || !navMenu || !navButtons) return;
 
     // Toggle menú al clickear hamburguesa
     hamburgerBtn.addEventListener('click', function(e) {
@@ -46,9 +46,17 @@ function initHamburgerMenu() {
         navOverlay.addEventListener('click', closeNavMenu);
     }
 
-    // Cerrar menú al clickear en un link del menú
-    document.querySelectorAll('.nav-menu a, .nav-buttons a').forEach(link => {
-        link.addEventListener('click', closeNavMenu);
+    // Cerrar menú al clickear en un link del menú o botón
+    const allMenuItems = document.querySelectorAll('.nav-menu a, .nav-buttons a, .nav-buttons button');
+    allMenuItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+            // No cerrar si es un botón que abre un menú desplegable
+            if (this.classList.contains('btn-primary') || this.classList.contains('btn-secondary')) {
+                closeNavMenu();
+            } else if (this.tagName === 'A') {
+                closeNavMenu();
+            }
+        });
     });
 
     // Cerrar menú si el viewport cambia a desktop
@@ -68,10 +76,28 @@ function toggleNavMenu() {
     const navButtons = document.querySelector('.nav-buttons');
     const navOverlay = document.getElementById('navOverlay');
 
-    hamburgerBtn.classList.toggle('active');
-    navMenu.classList.toggle('open');
-    navButtons.classList.toggle('open');
-    navOverlay?.classList.toggle('open');
+    const isOpen = navMenu.classList.contains('open');
+
+    if (isOpen) {
+        closeNavMenu();
+    } else {
+        openNavMenu();
+    }
+}
+
+/**
+ * Abrir menú
+ */
+function openNavMenu() {
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const navMenu = document.querySelector('.nav-menu');
+    const navButtons = document.querySelector('.nav-buttons');
+    const navOverlay = document.getElementById('navOverlay');
+
+    hamburgerBtn?.classList.add('active');
+    navMenu?.classList.add('open');
+    navButtons?.classList.add('open');
+    navOverlay?.classList.add('open');
 }
 
 /**
