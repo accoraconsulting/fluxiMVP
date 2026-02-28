@@ -83,6 +83,12 @@ body {
   position: relative;
 }
 
+.admin-topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
 .admin-topbar-left .admin-page-title {
   font-size: 28px;
   font-weight: 700;
@@ -91,6 +97,35 @@ body {
   -webkit-text-fill-color: transparent;
   background-clip: text;
   margin: 0;
+}
+
+/* Hamburger button styles for admin panel */
+.admin-topbar-left .sidebar-hamburger-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.admin-topbar-left .sidebar-hamburger-btn i {
+  font-size: 26px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.admin-topbar-left .sidebar-hamburger-btn:hover {
+  background: linear-gradient(135deg, #667eea25 0%, #764ba225 100%);
+  transform: scale(1.08);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
 }
 
 .admin-brand {
@@ -1018,6 +1053,19 @@ body {
     padding: 16px;
   }
 
+  .admin-topbar-left {
+    width: 100%;
+    gap: 12px;
+  }
+
+  .admin-topbar-left .sidebar-hamburger-btn {
+    display: flex;
+  }
+
+  .admin-topbar-left .admin-page-title {
+    font-size: 22px;
+  }
+
   .admin-brand {
     position: static;
     transform: none;
@@ -1025,6 +1073,7 @@ body {
     width: 100%;
     text-align: center;
     margin-bottom: 12px;
+    display: none;
   }
 
   .admin-stats-grid {
