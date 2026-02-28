@@ -356,6 +356,39 @@
 
 /* Responsive */
 @media (max-width: 768px) {
+  .profile-card {
+    margin: 0 16px 16px;
+    padding: 16px;
+    flex-direction: column;
+    text-align: center;
+    gap: 16px;
+  }
+
+  .profile-left {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .profile-left img {
+    width: 80px;
+    height: 80px;
+  }
+
+  .account-grid {
+    grid-template-columns: 1fr;
+    padding: 0 16px 16px;
+    gap: 16px;
+  }
+
+  .account-box {
+    padding: 16px;
+  }
+
+  .info-row {
+    flex-direction: column;
+    gap: 4px;
+  }
+
   .editor-box {
     padding: 24px;
     margin: 20px;
@@ -363,5 +396,15 @@
 
   .editor-actions {
     flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-card {
+    margin: 0 12px 12px;
+  }
+
+  .account-grid {
+    padding: 0 12px 12px;
   }
 }

@@ -698,6 +698,57 @@ tbody tr:hover {
   }
 }
 
+@media (max-width: 768px) {
+  body {
+    overflow: auto;
+    height: auto;
+  }
+
+  .page-header {
+    padding: 16px;
+  }
+
+  .page-title {
+    font-size: 22px;
+  }
+
+  .inscritos-table {
+    padding: 0 16px 16px;
+    overflow-x: auto;
+  }
+
+  table {
+    min-width: 700px;
+  }
+
+  .inscritos-actions {
+    padding: 0 16px 16px;
+  }
+
+  .transfer-modal {
+    width: 95%;
+    margin: 20px auto;
+  }
+
+  .modal-content {
+    width: 95%;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-header {
+    padding: 12px;
+  }
+
+  .inscritos-table {
+    padding: 0 12px 12px;
+  }
+
+  .inscritos-actions {
+    padding: 0 12px 12px;
+  }
+}
+
 
 /* Transfer Preview */
 .transfer-preview {

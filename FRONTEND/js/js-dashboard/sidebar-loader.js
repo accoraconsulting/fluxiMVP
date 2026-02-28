@@ -98,9 +98,75 @@ document.addEventListener("DOMContentLoaded", async () => {
       console.warn("[SidebarLoader] ⚠️ No se pudieron aplicar permisos:", err.message);
     }
 
+    // 8️⃣ HAMBURGER BUTTON para móvil - inyectar en el navbar
+    injectMobileHamburger();
+
     document.dispatchEvent(new Event("sidebar:loaded"));
 
   } catch (err) {
     console.error("[SidebarLoader] Error cargando sidebar:", err);
   }
 });
+
+/**
+ * Inyecta un botón hamburguesa en el navbar para abrir/cerrar el sidebar en móvil
+ */
+function injectMobileHamburger() {
+  const navbarLeft = document.querySelector('.fluxi-navbar-left');
+  if (!navbarLeft) return;
+
+  // Crear botón hamburguesa
+  const btn = document.createElement('button');
+  btn.className = 'sidebar-hamburger-btn';
+  btn.id = 'sidebarHamburgerBtn';
+  btn.setAttribute('aria-label', 'Menú');
+  btn.innerHTML = '<i class="bx bx-menu"></i>';
+
+  // Insertar al inicio del navbar-left
+  navbarLeft.insertBefore(btn, navbarLeft.firstChild);
+
+  // Lógica de toggle
+  btn.addEventListener('click', () => {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    if (!sidebar) return;
+
+    const isOpen = sidebar.classList.contains('mobile-open');
+    sidebar.classList.toggle('mobile-open', !isOpen);
+    if (overlay) overlay.classList.toggle('mobile-open', !isOpen);
+    btn.classList.toggle('active', !isOpen);
+  });
+
+  // Función para cerrar sidebar
+  function closeMobileSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    if (sidebar) sidebar.classList.remove('mobile-open');
+    if (overlay) overlay.classList.remove('mobile-open');
+    btn.classList.remove('active');
+  }
+
+  // Cerrar cuando se clickea el overlay
+  const overlay = document.getElementById('sidebarOverlay');
+  if (overlay) {
+    overlay.addEventListener('click', closeMobileSidebar);
+  }
+
+  // Cerrar cuando se clickea un link del sidebar
+  document.querySelectorAll('.menu-item').forEach(link => {
+    link.addEventListener('click', () => {
+      if (window.innerWidth <= 768 && link.id !== 'sidebarLogout') {
+        closeMobileSidebar();
+      }
+    });
+  });
+
+  // Cerrar al hacer resize a desktop
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 768) {
+      closeMobileSidebar();
+    }
+  });
+
+  console.log('[SidebarLoader] ✅ Hamburger button inyectado');
+}

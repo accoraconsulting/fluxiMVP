@@ -857,4 +857,49 @@
   .convert-input-group {
     grid-template-columns: 1fr 100px;
   }
+
+  .page-header {
+    padding: 16px;
+  }
+
+  .page-title {
+    font-size: 22px;
+  }
+
+  .wallet-summary {
+    padding: 16px;
+  }
+
+  .wallet-actions {
+    padding: 0 16px 16px;
+  }
+
+  .filters-section {
+    padding: 0 16px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-header {
+    padding: 12px;
+  }
+
+  .wallet-summary {
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .wallet-card {
+    padding: 16px;
+  }
+
+  .wallet-card h2,
+  .wallet-card h3 {
+    font-size: 22px;
+  }
+
+  .transactions {
+    margin: 0 12px 12px;
+    padding: 12px;
+  }
 }

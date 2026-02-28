@@ -306,3 +306,43 @@
 .fluxi-navbar {
   animation: slideInDown 0.5s ease;
 }
+
+/* ===================================
+   HAMBURGER BUTTON (móvil)
+   =================================== */
+.sidebar-hamburger-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.sidebar-hamburger-btn i {
+  font-size: 24px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.sidebar-hamburger-btn:hover {
+  background: linear-gradient(135deg, #667eea25 0%, #764ba225 100%);
+  transform: scale(1.05);
+}
+
+.sidebar-hamburger-btn.active i {
+  content: '';
+}
+
+@media (max-width: 768px) {
+  .sidebar-hamburger-btn {
+    display: flex;
+  }
+}
