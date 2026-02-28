@@ -1628,7 +1628,7 @@ nav {
 @media (max-width: 768px) {
     /* ===== NAVBAR CON HAMBURGUESA ===== */
     nav {
-        padding: 14px 20px;
+        padding: 12px 16px;
         position: sticky;
         top: 0;
         z-index: 1001;
@@ -1637,15 +1637,26 @@ nav {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        gap: 0;
+        height: 60px;
+        min-height: 60px;
+    }
+
+    .nav-logo-img {
+        height: 36px;
+        width: auto;
     }
 
     .nav-logo-container {
         flex: 1;
+        display: flex;
+        align-items: center;
     }
 
     .hamburger-btn {
         display: flex;
         margin-left: auto;
+        margin-right: 0;
     }
 
     /* MENÚ DESPLEGABLE ÚNICO */
@@ -1664,21 +1675,24 @@ nav {
         overflow: hidden;
         transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         z-index: 1000;
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        box-shadow: none;
+        border-bottom: none;
     }
 
     .nav-menu.open {
         max-height: 600px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
     }
 
     .nav-menu a {
-        padding: 16px 20px;
+        padding: 14px 20px;
         display: block;
         border-bottom: 1px solid rgba(0, 0, 0, 0.05);
         color: #333;
         text-decoration: none;
         font-weight: 500;
         transition: background 0.2s ease;
+        font-size: 15px;
     }
 
     .nav-menu a:hover {
@@ -1689,49 +1703,67 @@ nav {
         border-bottom: none;
     }
 
-    /* BOTONES EN MENÚ */
+    /* BOTONES EN MENÚ - DENTRO DEL DESPLEGABLE */
     .nav-buttons {
-        position: fixed;
-        top: auto;
-        left: 0;
-        right: 0;
-        background: white;
+        position: static;
+        display: none;
         flex-direction: column;
         gap: 0;
         width: 100%;
-        padding: 0;
+        padding: 12px 20px;
         margin: 0;
-        max-height: 0;
-        overflow: hidden;
-        transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.05s;
+        max-height: auto;
+        overflow: visible;
+        transition: none;
         z-index: 1000;
-        border-top: 1px solid rgba(102, 126, 234, 0.1);
-        bottom: auto;
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+        background: rgba(102, 126, 234, 0.05);
     }
 
     .nav-menu.open + .nav-buttons {
-        position: fixed;
-        top: auto;
+        display: flex;
     }
 
     .nav-buttons.open {
-        max-height: 150px;
-        bottom: auto;
+        display: flex;
     }
 
     .nav-buttons a {
-        padding: 12px 20px;
+        padding: 10px 0;
         display: block;
-        margin: 0;
+        margin: 4px 0;
         width: 100%;
         text-align: center;
         border: none;
+        border-radius: 6px;
     }
 
-    .btn-primary,
+    .btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        width: 100%;
+        padding: 12px;
+        border-radius: 8px;
+        margin: 6px 0;
+    }
+
+    .btn-primary:hover {
+        opacity: 0.9;
+    }
+
     .btn-secondary {
-        width: 90%;
-        margin: 8px auto;
+        border: 2px solid #667eea;
+        color: #667eea;
+        background: white;
+        width: 100%;
+        padding: 10px;
+        border-radius: 8px;
+        margin: 6px 0;
+    }
+
+    .btn-secondary:hover {
+        background: #667eea;
+        color: white;
     }
 
     /* ===== HERO SECTION ===== */
