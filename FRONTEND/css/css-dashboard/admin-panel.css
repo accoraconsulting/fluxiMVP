@@ -2046,3 +2046,145 @@ body {
     font-size: 24px;
   }
 }
+
+/* ===== EXTRA SMALL SCREENS (480px) ===== */
+@media (max-width: 480px) {
+  .admin-main-content {
+    padding: 12px;
+  }
+
+  .admin-topbar {
+    padding: 12px;
+    flex-direction: column;
+  }
+
+  .admin-brand {
+    margin-bottom: 8px;
+  }
+
+  .admin-stats-grid {
+    gap: 12px;
+  }
+
+  .admin-stats-card {
+    padding: 16px 12px;
+  }
+
+  .admin-stats-value {
+    font-size: 18px;
+  }
+
+  .admin-stats-change {
+    font-size: 10px;
+  }
+
+  .admin-alert-box {
+    padding: 16px 12px;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .admin-alert-icon {
+    width: 48px;
+    height: 48px;
+  }
+
+  .admin-alert-icon i {
+    font-size: 24px;
+  }
+
+  .admin-alert-content h4 {
+    font-size: 14px;
+  }
+
+  .admin-alert-content p {
+    font-size: 12px;
+  }
+
+  .admin-quick-summary {
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+
+  .admin-quick-summary h3 {
+    font-size: 16px;
+    margin-bottom: 12px;
+  }
+
+  .admin-summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-summary-card {
+    gap: 12px;
+    padding: 14px;
+  }
+
+  .admin-summary-icon {
+    width: 44px;
+    height: 44px;
+  }
+
+  .admin-summary-icon i {
+    font-size: 20px;
+  }
+
+  .admin-summary-value {
+    font-size: 20px;
+  }
+
+  .admin-summary-label {
+    font-size: 11px;
+  }
+
+  .admin-recent-payments {
+    padding: 16px;
+  }
+
+  .admin-recent-payments h3 {
+    font-size: 16px;
+  }
+
+  .admin-table {
+    font-size: 11px;
+  }
+
+  .admin-table th,
+  .admin-table td {
+    padding: 8px 4px;
+  }
+
+  .modern-modal-card {
+    width: 98%;
+  }
+
+  .modern-modal-header {
+    padding: 16px;
+  }
+
+  .modern-modal-body {
+    padding: 12px 16px;
+  }
+
+  .modern-modal-footer {
+    padding: 12px 16px;
+  }
+
+  .modern-btn {
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+
+  .modern-modal-amount {
+    font-size: 20px;
+  }
+
+  .admin-payment-detail-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .admin-detail-grid {
+    grid-template-columns: 1fr;
+  }
+}
