@@ -2,6 +2,7 @@
 
 document.addEventListener('DOMContentLoaded', function() {
     initSmoothScroll();
+    initHamburgerMenu();
 });
 
 /**
@@ -17,7 +18,6 @@ function initSmoothScroll() {
                     behavior: 'smooth',
                     block: 'start'
                 });
-                // Cerrar menú si está abierto
                 closeNavMenu();
             }
         });
@@ -25,98 +25,81 @@ function initSmoothScroll() {
 }
 
 /**
- * Initialize hamburger menu toggle
+ * Initialize hamburger menu
  */
 function initHamburgerMenu() {
     const hamburgerBtn = document.getElementById('hamburgerBtn');
-    const navMenu = document.querySelector('.nav-menu');
-    const navButtons = document.querySelector('.nav-buttons');
     const navOverlay = document.getElementById('navOverlay');
 
-    if (!hamburgerBtn || !navMenu || !navButtons) return;
+    if (!hamburgerBtn) return;
 
-    // Toggle menú al clickear hamburguesa
+    // En móvil: mover los botones dentro del nav-menu para tener UN solo dropdown
+    setupMobileMenu();
+
+    // Toggle
     hamburgerBtn.addEventListener('click', function(e) {
         e.stopPropagation();
-        toggleNavMenu();
+        const navMenu = document.querySelector('.nav-menu');
+        const isOpen = navMenu?.classList.contains('open');
+        isOpen ? closeNavMenu() : openNavMenu();
     });
 
-    // Cerrar menú al clickear overlay
-    if (navOverlay) {
-        navOverlay.addEventListener('click', closeNavMenu);
-    }
+    // Cerrar al clickear overlay
+    navOverlay?.addEventListener('click', closeNavMenu);
 
-    // Cerrar menú al clickear en un link del menú o botón
-    const allMenuItems = document.querySelectorAll('.nav-menu a, .nav-buttons a, .nav-buttons button');
-    allMenuItems.forEach(item => {
-        item.addEventListener('click', function(e) {
-            // No cerrar si es un botón que abre un menú desplegable
-            if (this.classList.contains('btn-primary') || this.classList.contains('btn-secondary')) {
-                closeNavMenu();
-            } else if (this.tagName === 'A') {
-                closeNavMenu();
-            }
-        });
-    });
-
-    // Cerrar menú si el viewport cambia a desktop
+    // Cerrar al resize a desktop
     window.addEventListener('resize', function() {
         if (window.innerWidth > 768) {
             closeNavMenu();
         }
+        setupMobileMenu();
     });
 }
 
 /**
- * Toggle del estado del menú
+ * Mover los botones dentro del nav-menu en móvil
  */
-function toggleNavMenu() {
-    const hamburgerBtn = document.getElementById('hamburgerBtn');
+function setupMobileMenu() {
     const navMenu = document.querySelector('.nav-menu');
     const navButtons = document.querySelector('.nav-buttons');
-    const navOverlay = document.getElementById('navOverlay');
+    if (!navMenu || !navButtons) return;
 
-    const isOpen = navMenu.classList.contains('open');
+    if (window.innerWidth <= 768) {
+        // Ocultar nav-buttons completamente (se movieron al menú)
+        navButtons.style.display = 'none';
 
-    if (isOpen) {
-        closeNavMenu();
+        // Si aún no se han movido los botones al menú
+        if (!navMenu.querySelector('.mobile-buttons')) {
+            const mobileButtonsDiv = document.createElement('div');
+            mobileButtonsDiv.className = 'mobile-buttons';
+
+            // Clonar los links de botones
+            navButtons.querySelectorAll('a').forEach(link => {
+                const clone = link.cloneNode(true);
+                clone.addEventListener('click', closeNavMenu);
+                mobileButtonsDiv.appendChild(clone);
+            });
+
+            navMenu.appendChild(mobileButtonsDiv);
+        }
     } else {
-        openNavMenu();
+        // En desktop: mostrar nav-buttons y eliminar clones
+        navButtons.style.display = '';
+        const mobileButtons = navMenu.querySelector('.mobile-buttons');
+        if (mobileButtons) {
+            mobileButtons.remove();
+        }
     }
 }
 
-/**
- * Abrir menú
- */
 function openNavMenu() {
-    const hamburgerBtn = document.getElementById('hamburgerBtn');
-    const navMenu = document.querySelector('.nav-menu');
-    const navButtons = document.querySelector('.nav-buttons');
-    const navOverlay = document.getElementById('navOverlay');
-
-    hamburgerBtn?.classList.add('active');
-    navMenu?.classList.add('open');
-    navButtons?.classList.add('open');
-    navOverlay?.classList.add('open');
+    document.getElementById('hamburgerBtn')?.classList.add('active');
+    document.querySelector('.nav-menu')?.classList.add('open');
+    document.getElementById('navOverlay')?.classList.add('open');
 }
 
-/**
- * Cerrar menú
- */
 function closeNavMenu() {
-    const hamburgerBtn = document.getElementById('hamburgerBtn');
-    const navMenu = document.querySelector('.nav-menu');
-    const navButtons = document.querySelector('.nav-buttons');
-    const navOverlay = document.getElementById('navOverlay');
-
-    hamburgerBtn?.classList.remove('active');
-    navMenu?.classList.remove('open');
-    navButtons?.classList.remove('open');
-    navOverlay?.classList.remove('open');
+    document.getElementById('hamburgerBtn')?.classList.remove('active');
+    document.querySelector('.nav-menu')?.classList.remove('open');
+    document.getElementById('navOverlay')?.classList.remove('open');
 }
-
-// Inicializar cuando el DOM está listo
-document.addEventListener('DOMContentLoaded', function() {
-    initSmoothScroll();
-    initHamburgerMenu();
-});
