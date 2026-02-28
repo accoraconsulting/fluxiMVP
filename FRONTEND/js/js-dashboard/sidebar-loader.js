@@ -112,7 +112,8 @@ document.addEventListener("DOMContentLoaded", async () => {
  * Inyecta un botón hamburguesa en el navbar para abrir/cerrar el sidebar en móvil
  */
 function injectMobileHamburger() {
-  const navbarLeft = document.querySelector('.fluxi-navbar-left');
+  // Buscar navbar en vistas dashboard o navbar en admin panel
+  const navbarLeft = document.querySelector('.fluxi-navbar-left') || document.querySelector('.admin-topbar-left');
   if (!navbarLeft) return;
 
   // Crear botón hamburguesa
